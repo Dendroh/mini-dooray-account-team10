@@ -1,6 +1,7 @@
 package com.example.minidoorayaccount.service;
 
 import com.example.minidoorayaccount.domain.AccountDto;
+import com.example.minidoorayaccount.entity.Account;
 import com.example.minidoorayaccount.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DefaultAccountService implements AccountService {
 
-    private AccountRepository repository;
+    private final AccountRepository repository;
 
     @Override
     public AccountDto getAccount(Integer id) {
@@ -20,7 +21,7 @@ public class DefaultAccountService implements AccountService {
 
     @Override
     public List<AccountDto> getAccounts() {
-        return null;
+        return repository.findAllBy();
     }
 
     @Override

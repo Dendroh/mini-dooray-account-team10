@@ -21,10 +21,12 @@ public class AccountTeamBundle {
 
     @ManyToOne
     @MapsId(value = "accountId")
+    @JoinColumn(name = "account_id")
     @OnDelete(action = OnDeleteAction.CASCADE) // account 가 삭제되면 해당 bundle 의 튜플(entity)도 delete cascade
     private Account account;
 
     @ManyToOne
+    @JoinColumn(name = "team_id")
     @MapsId(value = "teamId")
     @OnDelete(action = OnDeleteAction.CASCADE) // teamCode "
     private TeamCode teamCode;

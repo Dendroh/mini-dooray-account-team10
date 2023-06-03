@@ -1,20 +1,13 @@
 package com.example.minidoorayaccount.domain;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Getter;
-import lombok.Setter;
+public interface AccountDto {
+    Integer getAccountId();
 
-@Getter
-@Setter
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class AccountDto {
-    Integer accountId;
+    String getEmail();
 
-    String email;
+    String getPassword();
 
-    String password;
+    String getName();
 
-    String name;
-
-    String imageFileName;
+    String getImageFileName();
 }
