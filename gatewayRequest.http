@@ -1,0 +1,3 @@
+GET /accounts
+Content-Type: application/json
+Host:localhost:8080

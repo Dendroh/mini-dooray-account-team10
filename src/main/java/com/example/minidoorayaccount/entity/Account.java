@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "account")
@@ -25,5 +26,11 @@ public class Account {
 
     @Column(name = "image_file_name")
     private String imageFileName;
+
+    @Column(name = "is_dormant")
+    private Boolean isDormant;
+
+    @Column(name = "register_date")
+    private LocalDateTime registerDate;
 
 }

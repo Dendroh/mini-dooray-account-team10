@@ -1,18 +1,17 @@
 package com.example.minidoorayaccount.domain;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Getter;
-import lombok.Setter;
+import com.example.minidoorayaccount.entity.Account;
+import com.example.minidoorayaccount.entity.AccountTeamBundle;
+import com.example.minidoorayaccount.entity.TeamCode;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class AccountTeamBundleDto {
-    private Integer teamId;
+public interface AccountTeamBundleDto {
+    AccountTeamBundle.Pk getPk();
 
-    private Integer accountId;
+    TeamCode getTeamCode();
 
-    private LocalDateTime registerDate;
+    Account getAccount();
+
+    LocalDateTime getRegisterDate();
 }
