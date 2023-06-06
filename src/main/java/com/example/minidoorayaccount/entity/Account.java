@@ -22,15 +22,4 @@ public class Account {
 
     private String password;
 
-    private String name;
-
-    @Column(name = "image_file_name")
-    private String imageFileName;
-
-    @Column(name = "is_dormant")
-    private Boolean isDormant;
-
-    @Column(name = "register_date")
-    private LocalDateTime registerDate;
-
 }

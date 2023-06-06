@@ -9,11 +9,4 @@ public interface AccountDto {
 
     String getPassword();
 
-    String getName();
-
-    String getImageFileName();
-
-    Boolean getIsDormant();
-
-    LocalDateTime getRegisterDate();
 }

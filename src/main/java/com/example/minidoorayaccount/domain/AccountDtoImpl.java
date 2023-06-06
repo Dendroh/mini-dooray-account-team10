@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import java.time.LocalDateTime;
 
 @Data
+@AllArgsConstructor
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class AccountDtoImpl {
     private Integer accountId;
@@ -15,11 +16,4 @@ public final class AccountDtoImpl {
 
     private String password;
 
-    private String name;
-
-    private String imageFileName;
-
-    private Boolean isDormant;
-
-    private LocalDateTime registerDate;
 }

@@ -1,6 +1,7 @@
 package com.example.minidoorayaccount.domain;
 
 import com.example.minidoorayaccount.entity.Account;
+import com.example.minidoorayaccount.entity.AccountDetails;
 import com.example.minidoorayaccount.entity.AccountTeamBundle;
 import com.example.minidoorayaccount.entity.TeamCode;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -17,11 +18,12 @@ import javax.persistence.MapsId;
 import java.time.LocalDateTime;
 
 @Data
+@AllArgsConstructor
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class AccountTeamBundleDtoImpl implements AccountTeamBundleDto {
+public final class AccountTeamBundleDtoImpl {
     private AccountTeamBundle.Pk pk;
 
-    private Account account;
+    private AccountDetails accountDetails;
 
     private TeamCode teamCode;
 

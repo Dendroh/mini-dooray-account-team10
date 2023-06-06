@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @NamedEntityGraph(name = "bundlesWithAccountAndTeamCode", attributeNodes = {
-        @NamedAttributeNode(value = "account"),
+        @NamedAttributeNode(value = "accountDetails"),
         @NamedAttributeNode(value = "teamCode")
 })
 @Entity
@@ -24,13 +24,13 @@ public class AccountTeamBundle {
     @EmbeddedId
     private Pk pk;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    @MapsId(value = "accountId")
-    @JoinColumn(name = "account_id")
-    @OnDelete(action = OnDeleteAction.CASCADE) // account 가 삭제되면 해당 bundle 의 튜플(entity)도 delete cascade
-    private Account account;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId(value = "accountDetailsId")
+    @JoinColumn(name = "account_details_id")
+    @OnDelete(action = OnDeleteAction.CASCADE) // accountDetails 가 삭제되면 해당 bundle 의 튜플(entity)도 delete cascade
+    private AccountDetails accountDetails;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     @MapsId(value = "teamId")
     @OnDelete(action = OnDeleteAction.CASCADE) // teamCode "
@@ -49,8 +49,8 @@ public class AccountTeamBundle {
         @Column(name = "team_id")
         private Integer teamId;
 
-        @Column(name = "account_id")
-        private Integer accountId;
+        @Column(name = "account_details_id")
+        private Integer  accountDetailsId;
     }
 
 }

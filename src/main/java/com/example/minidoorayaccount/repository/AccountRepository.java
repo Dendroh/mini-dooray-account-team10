@@ -10,23 +10,21 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface AccountRepository extends JpaRepository<Account, Integer> {
+public interface AccountRepository extends JpaRepository<Account, Integer>, AccountRepositoryCustom {
     List<AccountDto> findAllBy();
 
     AccountDto findByAccountId(Integer accountId);
 
+    AccountDto findByEmail(String email);
+
     Account getByAccountId(Integer accountId);
 
-    Account getByName(String accountName);
+    Account getByEmail(String email);
 
-    @Modifying
-    @Query("update Account a set " +
-            "a.name = :#{#updateAccount.name}, a.password = :#{#updateAccount.password}, a.email = :#{#updateAccount.email}, " +
-            "a.imageFileName = :#{#updateAccount.imageFileName}, a.isDormant = :#{#updateAccount.isDormant}, a.registerDate = :#{#updateAccount.registerDate} " +
-            "where a.accountId = :#{#updateAccount.accountId}")
-    Integer updateAccount(@Param("updateAccount") Account account);
+    AccountDtoImpl queryByAccountId(Integer accountId);
 
-    @Modifying
-    @Query("delete from Account a where a.accountId = :deleteAccountId")
-    Integer deleteAccountById(@Param("deleteAccountId") Integer accountId);
+    AccountDtoImpl queryByEmail(String email);
+
+    @Override
+    <S extends Account> S saveAndFlush(S entity);
 }

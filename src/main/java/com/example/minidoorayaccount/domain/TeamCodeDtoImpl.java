@@ -7,8 +7,9 @@ import lombok.Data;
 import javax.persistence.Column;
 
 @Data
+@AllArgsConstructor
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class TeamCodeDtoImpl {
+public final class TeamCodeDtoImpl {
 
     private Integer teamId;
 
