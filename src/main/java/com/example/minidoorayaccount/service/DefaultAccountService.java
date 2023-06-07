@@ -1,6 +1,7 @@
 package com.example.minidoorayaccount.service;
 
 import com.example.minidoorayaccount.domain.AccountDto;
+import com.example.minidoorayaccount.domain.AccountDtoImpl;
 import com.example.minidoorayaccount.entity.Account;
 import com.example.minidoorayaccount.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,19 +16,20 @@ public class DefaultAccountService implements AccountService {
     private final AccountRepository repository;
 
     @Override
-    public AccountDto getAccount(Integer id) {
-        return null;
+    public List<AccountDto> getAccounts() {
+        return repository.findAllBy();
     }
 
     @Override
-    public List<AccountDto> getAccounts() {
-        return repository.findAllBy();
+    public AccountDtoImpl getAccountByEmail(String email) {
+        return null;
     }
 
     @Override
     public AccountDto createAccount() {
         return null;
     }
+
 
     @Override
     public AccountDto modifyAccount(AccountDto target) {

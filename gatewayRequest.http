@@ -1,3 +1,103 @@
+###
+### account API request
+
+# account api 1. test용 - 모든 계정 확인
 GET /accounts
 Content-Type: application/json
+Host:localhost:8080
+
+
+
+###
+### teamCode API request
+
+# team api1. GET /teams/{teamName}
+# : teamName으로 teamCode 조회
+GET /teams/민트초코
+Content-Type: application/json
+Host:localhost:8080
+
+###
+
+# team api2. POST /teams
+# : requestbody(teamName)로 단일 teamCode 추가
+POST /teams
+Content-Type: application/json
+Host:localhost:8080
+
+{
+  "teamName": "제육볶음 러버즈"
+}
+
+###
+
+# team api3. PUT /teams
+# : requestbody(teamId, teamName)로 단일 teamCode 수정
+PUT /teams
+Content-Type: application/json
+Host:localhost:8080
+
+{
+  "teamId": 28,
+  "teamName": "치킨 러버즈"
+}
+
+###
+
+# team api4. DELETE /teams
+# : teamId로 단일 teamCode 삭제
+DELETE /teams/{teamId}
+Host: localhost:8080
+
+
+
+###
+### accountTeamCodeBundle API request
+
+# accountTeamCodeBundle api1. GET /accountTeams/id/{accountId}
+# : accountId로 복수 teamCode 조회
+GET /accountTeams/id/4
+Host: localhost:8080
+
+###
+
+# accountTeamCodeBundle api2. GET /accountTeams/name/{accountName}
+# : accountName으로 복수 teamCode 조회
+GET /accountTeams/name/name10
+Host: localhost:8080
+
+###
+
+# accountTeamCodeBundle api3. POST /accountTeams
+# : postRequestbody(teamId, accountId)로 단일 accountTeamBundle 추가
+
+POST /accountTeams
+Content-Type: application/json
+Host:localhost:8080
+
+{
+  "accountId": 4,
+  "teamId": 28
+}
+
+###
+
+# accountTeamCodeBundle api3. POST /accountTeams
+# : updateRequestbody(teamId, accountId, newTeamId, newAccountId)로 단일 accountTeamBundle's teamId or accountId, registerDate 수정
+PUT /accountTeams
+Content-Type: application/json
+Host:localhost:8080
+
+{
+  "teamId": 28,
+  "accountId": 4,
+  "newTeamId": 6
+}
+
+###
+
+# accountTeamCodeBundle api4. DELETE /accountTeams/{deleteTeamId}/{deleteAccountId}
+# : deleteTeamId, deleteAccountId로 단일 accountTeamBundle 삭제
+
+DELETE /accountTeams/28/4
 Host:localhost:8080

@@ -14,6 +14,9 @@ public interface AccountTeamCodeBundleRepository extends JpaRepository<AccountTe
 
     List<AccountTeamBundleDto> findAllBy();
 
+    @Override
+    <S extends AccountTeamBundle> S saveAndFlush(S entity);
+
     List<AccountTeamBundle> findByAccountDetails_AccountDetailsId(Integer accountId);
 
     List<AccountTeamBundleDto> getByAccountDetails_Name(String accountName);
@@ -23,5 +26,7 @@ public interface AccountTeamCodeBundleRepository extends JpaRepository<AccountTe
     AccountTeamBundleDtoImpl queryByTeamCode_TeamNameAndAccountDetails_Name(String teamName, String accountName);
 
     AccountTeamBundle findByAccountDetails_NameAndTeamCode_TeamName(String accountName, String teamName);
+
+    List<AccountTeamBundle> findByAccountDetails_Name(String accountName);
 
 }

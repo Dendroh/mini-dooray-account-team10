@@ -38,6 +38,14 @@ class AccountTeamCodeBundleRepositoryTest {
     }
 
     @Test
+    @DisplayName("test AccountTeamCodeBundle repository's findByAccountDetails_Name")
+    void testFindByAccountDetails_Name() {
+        List<AccountTeamBundle> accountTeamBundles = repository.findByAccountDetails_Name("name10");
+
+        assertThat(accountTeamBundles).hasSize(2);
+    }
+
+    @Test
     @DisplayName("test AccountTeamCodeBundle repository's registerDatesByAccountName method")
     void testRegisterDatesByAccountName() {
         List<AccountTeamBundleDto> registerDateList = repository.getByAccountDetails_Name("name11");

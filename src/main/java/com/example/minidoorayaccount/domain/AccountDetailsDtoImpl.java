@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
@@ -13,8 +15,7 @@ import java.time.LocalDateTime;
 public class AccountDetailsDtoImpl {
     private Integer accountDetailsId;
 
-    private Account account;
-
+    @NotBlank
     private String name;
 
     private String imageFileName;

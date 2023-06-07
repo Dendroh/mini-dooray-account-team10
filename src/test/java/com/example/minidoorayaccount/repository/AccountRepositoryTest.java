@@ -3,6 +3,7 @@ package com.example.minidoorayaccount.repository;
 import com.example.minidoorayaccount.domain.AccountDto;
 import com.example.minidoorayaccount.domain.AccountDtoImpl;
 import com.example.minidoorayaccount.entity.Account;
+import com.example.minidoorayaccount.entity.AccountDetails;
 import com.example.minidoorayaccount.entity.AccountTeamBundle;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,9 @@ class AccountRepositoryTest {
 
     @Autowired
     AccountTeamCodeBundleRepository bundleRepository;
+
+    @Autowired
+    AccountDetailsRepository detailsRepository;
 
 
     @Test
@@ -89,18 +93,21 @@ class AccountRepositoryTest {
     void testDeleteAccount() {
         Account deleteAccount = repository.getByAccountId(4);
         List<AccountTeamBundle> deletedBundle = bundleRepository.findByAccountDetails_AccountDetailsId(4);
+        AccountDetails deleteDetails = detailsRepository.getByAccountDetailsId(4);
 
         assertThat(deleteAccount).isNotNull();
         assertThat(deletedBundle).hasSize(1);
+        assertThat(deleteDetails).isNotNull();
 
         repository.deleteAccountById(deleteAccount.getAccountId());
 
         deleteAccount = repository.getByAccountId(deleteAccount.getAccountId());
         deletedBundle = bundleRepository.findByAccountDetails_AccountDetailsId(4);
+        deleteDetails = detailsRepository.getByAccountDetailsId(4);
 
         assertThat(deleteAccount).isNull();
         assertThat(deletedBundle).isEmpty();
+        assertThat(deleteDetails).isNull();
     }
-
 
 }

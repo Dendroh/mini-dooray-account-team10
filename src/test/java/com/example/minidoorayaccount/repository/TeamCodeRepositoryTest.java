@@ -3,6 +3,7 @@ package com.example.minidoorayaccount.repository;
 import com.example.minidoorayaccount.domain.TeamCodeDto;
 import com.example.minidoorayaccount.domain.TeamCodeDtoImpl;
 import com.example.minidoorayaccount.entity.TeamCode;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,6 +85,10 @@ class TeamCodeRepositoryTest {
          deleteTeamCode = repository.findByTeamName("Team2");
 
          assertThat(deleteTeamCode).isNull();
+
+        Assertions.assertDoesNotThrow(() -> {
+            repository.deleteTeamCode(1000);
+        });
     }
 
 }

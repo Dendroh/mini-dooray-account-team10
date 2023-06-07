@@ -15,10 +15,11 @@ import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-@Data
 @AllArgsConstructor
+@Data
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class AccountTeamBundleDtoImpl {
     private AccountTeamBundle.Pk pk;
