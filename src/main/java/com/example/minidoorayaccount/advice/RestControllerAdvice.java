@@ -1,10 +1,7 @@
 package com.example.minidoorayaccount.advice;
 
 import com.example.minidoorayaccount.domain.ExceptionRequest;
-import com.example.minidoorayaccount.exception.NotFoundAccountDetailsException;
-import com.example.minidoorayaccount.exception.NotFoundAccountTeamBundleException;
-import com.example.minidoorayaccount.exception.NotFoundTeamCodeException;
-import com.example.minidoorayaccount.exception.ValidationFailedException;
+import com.example.minidoorayaccount.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,7 +23,7 @@ public class RestControllerAdvice {
         return eventErrorRequest;
     }
 
-    @ExceptionHandler(value = {NotFoundTeamCodeException.class, NotFoundAccountDetailsException.class, NotFoundAccountTeamBundleException.class})
+    @ExceptionHandler(value = {NotFoundTeamCodeException.class, NotFoundAccountDetailsException.class, NotFoundAccountTeamBundleException.class, NotFoundAccountException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public ExceptionRequest notFounds(Exception ig, HttpServletRequest req) {

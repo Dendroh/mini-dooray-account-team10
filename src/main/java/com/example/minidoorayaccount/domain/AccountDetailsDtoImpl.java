@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class AccountDetailsDtoImpl {
     private Integer accountDetailsId;
-
     @NotBlank
     private String name;
 

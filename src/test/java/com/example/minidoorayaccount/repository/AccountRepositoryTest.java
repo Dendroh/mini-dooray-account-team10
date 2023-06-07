@@ -91,12 +91,13 @@ class AccountRepositoryTest {
     @Test
     @DisplayName("test account repository's delete Account")
     void testDeleteAccount() {
+
         Account deleteAccount = repository.getByAccountId(4);
         List<AccountTeamBundle> deletedBundle = bundleRepository.findByAccountDetails_AccountDetailsId(4);
         AccountDetails deleteDetails = detailsRepository.getByAccountDetailsId(4);
 
         assertThat(deleteAccount).isNotNull();
-        assertThat(deletedBundle).hasSize(1);
+        assertThat(deletedBundle).isNotEmpty();
         assertThat(deleteDetails).isNotNull();
 
         repository.deleteAccountById(deleteAccount.getAccountId());

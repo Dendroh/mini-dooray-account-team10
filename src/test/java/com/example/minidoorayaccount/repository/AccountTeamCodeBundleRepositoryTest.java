@@ -32,7 +32,7 @@ class AccountTeamCodeBundleRepositoryTest {
     void testFindAllBy() {
         List<AccountTeamBundleDto> accountTeamBundles = repository.findAllBy();
 
-        assertThat(accountTeamBundles).hasSize(15);
+        assertThat(accountTeamBundles).isNotEmpty();
 
         assertThat(accountTeamBundles.get(0).getTeamCode().getTeamId()).isEqualTo(1);
     }

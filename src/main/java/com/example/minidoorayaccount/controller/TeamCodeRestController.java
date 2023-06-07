@@ -20,7 +20,7 @@ public class TeamCodeRestController {
         return service.getTeamCodeByTeamName(teamName);
     }
 
-    @PostMapping("/teams")
+    @PostMapping("/teams/")
     public TeamCodeDtoImpl postTeams(@Valid @RequestBody TeamCodeDtoImpl teamCodeDto, BindingResult result) {
         if (result.hasErrors())
             throw new ValidationFailedException(result);
@@ -28,7 +28,7 @@ public class TeamCodeRestController {
         return service.createTeamCode(teamCodeDto);
     }
 
-    @PutMapping("/teams")
+    @PutMapping("/teams/")
     public TeamCodeDtoImpl putTeamsById(@Valid @RequestBody TeamCodeDtoImpl teamCodeDto, BindingResult result) {
         if (result.hasErrors())
             throw new ValidationFailedException(result);

@@ -6,14 +6,16 @@ import com.example.minidoorayaccount.domain.AccountDtoImpl;
 import java.util.List;
 
 public interface AccountService {
-    AccountDto createAccount();
+    AccountDtoImpl createAccount(AccountDtoImpl accountDto);
+
+    AccountDtoImpl getAccountById(Integer accountId);
 
     AccountDtoImpl getAccountByEmail(String email);
 
     List<AccountDto> getAccounts();
 
-    AccountDto modifyAccount(AccountDto target);
+    AccountDtoImpl modifyAccount(AccountDtoImpl accountDto);
 
-    void deleteAccount();
+    Integer deleteAccount(Integer deleteId);
 
 }

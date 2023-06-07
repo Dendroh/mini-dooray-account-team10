@@ -1,29 +1,68 @@
 ###
 ### account API request
 
-# account api 1. test용 - 모든 계정 확인
+# account api1. test용 - 모든 계정 확인
 GET /accounts
+Host:localhost:9090
+
+###
+
+# account api2. GET /accounts/{accountId}
+# : accountId로 단일 account 조회
+GET /accounts/5
+Host:localhost:9090
+
+###
+
+# account api3. GET /accounts/email/{accountEmail}
+# : accountEmail로 단일 account 조회
+
+GET /accounts/email/example5%40gmail.com
+Host:localhost:9090
+
+###
+
+# account api4. POST /accounts/
+# : requestbody(email, password)
+
+POST /accounts/
 Content-Type: application/json
-Host:localhost:8080
+Host:localhost:9090
 
+{
+  "email": "example99@gmail.com",
+  "password": "$2a$10$d25ln4Y7bgnMby9IGVfd2uIEcAwWTA04IzRV64UcQ2HCcDritVoF."
+}
 
+###
+
+# account api5. PUT /accounts/
+# : requestbody(email, password)
+
+PUT /accounts/
+Content-Type: application/json
+Host:localhost:9090
+
+{
+  "email": "example"
+}
 
 ###
 ### teamCode API request
 
 # team api1. GET /teams/{teamName}
 # : teamName으로 teamCode 조회
-GET /teams/민트초코
+GET /teams/민트초코 불매단
 Content-Type: application/json
-Host:localhost:8080
+Host:localhost:9090
 
 ###
 
 # team api2. POST /teams
 # : requestbody(teamName)로 단일 teamCode 추가
-POST /teams
+POST /teams/
 Content-Type: application/json
-Host:localhost:8080
+Host:localhost:9090
 
 {
   "teamName": "제육볶음 러버즈"
@@ -33,9 +72,9 @@ Host:localhost:8080
 
 # team api3. PUT /teams
 # : requestbody(teamId, teamName)로 단일 teamCode 수정
-PUT /teams
+PUT /teams/
 Content-Type: application/json
-Host:localhost:8080
+Host:localhost:9090
 
 {
   "teamId": 28,
@@ -47,7 +86,7 @@ Host:localhost:8080
 # team api4. DELETE /teams
 # : teamId로 단일 teamCode 삭제
 DELETE /teams/{teamId}
-Host: localhost:8080
+Host: localhost:9090
 
 
 
@@ -57,23 +96,23 @@ Host: localhost:8080
 # accountTeamCodeBundle api1. GET /accountTeams/id/{accountId}
 # : accountId로 복수 teamCode 조회
 GET /accountTeams/id/4
-Host: localhost:8080
+Host: localhost:9090
 
 ###
 
 # accountTeamCodeBundle api2. GET /accountTeams/name/{accountName}
 # : accountName으로 복수 teamCode 조회
 GET /accountTeams/name/name10
-Host: localhost:8080
+Host: localhost:9090
 
 ###
 
 # accountTeamCodeBundle api3. POST /accountTeams
 # : postRequestbody(teamId, accountId)로 단일 accountTeamBundle 추가
 
-POST /accountTeams
+POST /accountTeams/
 Content-Type: application/json
-Host:localhost:8080
+Host:localhost:9090
 
 {
   "accountId": 4,
@@ -84,9 +123,9 @@ Host:localhost:8080
 
 # accountTeamCodeBundle api3. POST /accountTeams
 # : updateRequestbody(teamId, accountId, newTeamId, newAccountId)로 단일 accountTeamBundle's teamId or accountId, registerDate 수정
-PUT /accountTeams
+PUT /accountTeams/
 Content-Type: application/json
-Host:localhost:8080
+Host:localhost:9090
 
 {
   "teamId": 28,
@@ -100,4 +139,4 @@ Host:localhost:8080
 # : deleteTeamId, deleteAccountId로 단일 accountTeamBundle 삭제
 
 DELETE /accountTeams/28/4
-Host:localhost:8080
+Host:localhost:9090

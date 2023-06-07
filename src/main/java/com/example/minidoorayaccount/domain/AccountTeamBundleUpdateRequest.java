@@ -8,10 +8,8 @@ import javax.validation.constraints.NotNull;
 @Data
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class AccountTeamBundleUpdateRequest {
-
     @NotNull
     Integer accountId;
-
     @NotNull
     Integer teamId;
 
