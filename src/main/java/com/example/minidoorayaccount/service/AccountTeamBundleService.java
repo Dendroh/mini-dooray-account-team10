@@ -1,9 +1,6 @@
 package com.example.minidoorayaccount.service;
 
-import com.example.minidoorayaccount.domain.AccountTeamBundleDtoImpl;
-import com.example.minidoorayaccount.domain.AccountTeamBundlePostRequest;
-import com.example.minidoorayaccount.domain.AccountTeamBundleUpdateRequest;
-import com.example.minidoorayaccount.domain.TeamCodeDtoImpl;
+import com.example.minidoorayaccount.domain.*;
 
 import java.util.List;
 
@@ -12,10 +9,10 @@ public interface AccountTeamBundleService {
 
     List<TeamCodeDtoImpl> getTeamNamesByAccountName(String accountName);
 
-    AccountTeamBundleDtoImpl createAccountTeamBundle(AccountTeamBundlePostRequest accountTeamBundleDto);
+    AccountTeamBundleReqDto createAccountTeamBundle(AccountTeamBundleReqDto accountTeamBundleDto);
 
-    AccountTeamBundleDtoImpl updateAccountTeamBundle(AccountTeamBundleUpdateRequest accountTeamBundleDto);
+    AccountTeamBundleReqDto updateAccountTeamBundle(AccountTeamBundleUpdateRequest accountTeamBundleDto);
 
-    AccountTeamBundlePostRequest deleteAccountTeamBundle(Integer deleteTeamId, Integer deleteAccountId);
+    AccountTeamBundleReqDto deleteAccountTeamBundle(Integer deleteTeamId, Integer deleteAccountId);
 
 }

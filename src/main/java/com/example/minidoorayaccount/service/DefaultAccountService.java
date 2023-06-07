@@ -7,6 +7,7 @@ import com.example.minidoorayaccount.exception.NotFoundAccountException;
 import com.example.minidoorayaccount.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.security.auth.login.AccountException;
 import java.util.List;
@@ -49,6 +50,7 @@ public class DefaultAccountService implements AccountService {
     }
 
     @Override
+    @Transactional
     public AccountDtoImpl modifyAccount(AccountDtoImpl accountDto) {
         if (Objects.isNull(repository.getByAccountId(accountDto.getAccountId())))
             throw new NotFoundAccountException();
@@ -58,6 +60,7 @@ public class DefaultAccountService implements AccountService {
     }
 
     @Override
+    @Transactional
     public Integer deleteAccount(Integer deleteId) {
         repository.deleteAccountById(deleteId);
         return deleteId;

@@ -23,7 +23,7 @@ Host:localhost:9090
 ###
 
 # account api4. POST /accounts/
-# : requestbody(email, password)
+# : requestbody(email, password)로 단일 account 추가
 
 POST /accounts/
 Content-Type: application/json
@@ -37,15 +37,74 @@ Host:localhost:9090
 ###
 
 # account api5. PUT /accounts/
-# : requestbody(email, password)
-
+# : requestbody(accountId, email, password)로 단일 account 수정
 PUT /accounts/
 Content-Type: application/json
 Host:localhost:9090
 
 {
-  "email": "example"
+  "accountId": 16,
+  "email": "example",
+  "password": "$2a$10$HXhQhbKjkcrVDTIEu5..vevGdlW5KBek7MhNlmY7ZugtTYzlezLEK"
 }
+
+###
+
+# account api6. DELETE /accounts/{accountId}
+# : accountId로 단일 account 삭제
+DELETE /accounts/16
+Host:localhost:9090
+
+
+
+###
+### accountDetails API request
+
+# accountDetails api1. GET /accountDetails
+# : requestbody(accountId, email, password)로 단일 account 수정
+GET /accountDetails
+Host:localhost:9090
+
+###
+
+# accountDetails api2. GET /accountDetails/{accountDetailsId} (= accountId)
+# : requestbody(accountId, email, password)로 단일 account 수정
+GET /accountDetails/4
+Host:localhost:9090
+
+###
+
+# accountDetails api3. POST /accountDetails
+# : requestbody(accountDetailsId, name)로 단일 accountDetails 수정
+POST /accountDetails/
+Content-Type: application/json
+Host:localhost:9090
+
+{
+  "accountDetailsId": 104,
+  "name": "name104"
+}
+
+###
+
+# accountDetails api4. PUT /accountDetails
+# : requestbody(accountDetailsId, name, isDormant)로 단일 accountDetails 수정
+PUT /accountDetails/
+Content-Type: application/json
+Host:localhost:9090
+
+{
+  "accountDetailsId": 104,
+  "name": "name1111",
+  "isDormant": true
+}
+
+###
+
+# accountDetails api5. DELETE /accountDetails/{deleteAccountDetailId}
+# : deleteAccountDetailId로 단일 accountDetails 삭제
+DELETE /accountDetails/104
+Host:localhost:9090
 
 ###
 ### teamCode API request
@@ -94,14 +153,14 @@ Host: localhost:9090
 ### accountTeamCodeBundle API request
 
 # accountTeamCodeBundle api1. GET /accountTeams/id/{accountId}
-# : accountId로 복수 teamCode 조회
+# : accountId로 복수 teamCode 조회 (account가 속한 팀 조회)
 GET /accountTeams/id/4
 Host: localhost:9090
 
 ###
 
 # accountTeamCodeBundle api2. GET /accountTeams/name/{accountName}
-# : accountName으로 복수 teamCode 조회
+# : accountName으로 복수 teamCode 조회 (account가 속한 팀 조회)
 GET /accountTeams/name/name10
 Host: localhost:9090
 

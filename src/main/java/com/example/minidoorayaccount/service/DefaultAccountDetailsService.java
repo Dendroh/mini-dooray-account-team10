@@ -9,7 +9,9 @@ import com.example.minidoorayaccount.repository.AccountDetailsRepository;
 import com.example.minidoorayaccount.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,23 +39,49 @@ public class DefaultAccountDetailsService implements AccountDetailsService {
     }
 
     @Override
+    public AccountDetailsDtoImpl getAccountDetailByName(String accountName) {
+        AccountDetailsDtoImpl accountTeamBundleDto = detailsRepository.findByName(accountName);
+
+        if (Objects.isNull(accountTeamBundleDto))
+            throw new NotFoundAccountDetailsException();
+
+        return accountTeamBundleDto;
+    }
+
+
+    @Override
     public AccountDetailsDtoImpl createAccountDetail(AccountDetailsDtoImpl accountDetailsDto) {
+        accountDetailsDto.setImageFileName(accountDetailsDto.getName() + ".png");
+        accountDetailsDto.setRegisterDate(LocalDateTime.now());
+        accountDetailsDto.setIsDormant(false);
         return converterToDtoImpl(detailsRepository.saveAndFlush(converterToEntity(accountDetailsDto)));
     }
 
 
     @Override
+    @Transactional
     public AccountDetailsDtoImpl modifyAccountDetail(AccountDetailsDtoImpl accountDetailsDto) {
-        AccountDetailsDtoImpl accountTeamBundleDto = detailsRepository.findByAccountDetailsId(accountDetailsDto.getAccountDetailsId());
+        AccountDetailsDtoImpl accountDetailImpl = detailsRepository.findByAccountDetailsId(accountDetailsDto.getAccountDetailsId());
 
-        if (Objects.isNull(accountTeamBundleDto))
+        if (Objects.isNull(accountDetailImpl))
             throw new NotFoundAccountDetailsException();
 
-        detailsRepository.updateAccountDetails(accountDetailsDto);
+        accountDetailImpl.setName(accountDetailsDto.getName());
+        accountDetailImpl.setIsDormant(accountDetailsDto.getIsDormant());
+        accountDetailImpl.setImageFileName(accountDetailsDto.getName() + ".png");
 
-        return accountDetailsDto;
+        detailsRepository.updateAccountDetails(accountDetailImpl);
+
+        return accountDetailImpl;
     }
 
+
+    @Override
+    @Transactional
+    public AccountDetailsDtoImpl deleteAccountDetail(Integer deleteAccountDetailId) {
+        detailsRepository.deleteAccountDetails(deleteAccountDetailId);
+        return new AccountDetailsDtoImpl(deleteAccountDetailId, null, null, null, null);
+    }
 
 
     public AccountDetailsDtoImpl converterToDtoImpl(AccountDetails accountDetail) {
@@ -69,10 +97,11 @@ public class DefaultAccountDetailsService implements AccountDetailsService {
             throw new NotFoundAccountException();
 
         accountDetails.setAccount(account);
-        accountDetails.setAccountDetailsId(accountDetails.getAccountDetailsId());
+        accountDetails.setAccountDetailsId(accountDetailsDto.getAccountDetailsId());
+        accountDetails.setName(accountDetailsDto.getName());
         accountDetails.setRegisterDate(accountDetailsDto.getRegisterDate());
         accountDetails.setImageFileName(accountDetailsDto.getImageFileName());
-        accountDetails.setName(accountDetails.getName());
+        accountDetails.setIsDormant(accountDetailsDto.getIsDormant());
 
         return accountDetails;
     }

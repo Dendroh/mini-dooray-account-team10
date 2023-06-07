@@ -1,10 +1,7 @@
 package com.example.minidoorayaccount.controller;
 
 import com.example.minidoorayaccount.domain.AccountDetailsDtoImpl;
-import com.example.minidoorayaccount.domain.AccountTeamBundleDtoImpl;
-import com.example.minidoorayaccount.entity.AccountDetails;
 import com.example.minidoorayaccount.exception.ValidationFailedException;
-import com.example.minidoorayaccount.repository.AccountDetailsRepository;
 import com.example.minidoorayaccount.service.AccountDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.BindingResult;
@@ -29,6 +26,11 @@ public class AccountDetailsRestController {
         return service.getAccountDetailById(accountId);
     }
 
+    @GetMapping("/accountDetails/name/{detailsName}")
+    public AccountDetailsDtoImpl getAccountDetailByName(@PathVariable("detailsName") String detailsName) {
+        return service.getAccountDetailByName(detailsName);
+    }
+
     @PostMapping("/accountDetails/")
     public AccountDetailsDtoImpl postAccountDetail(@Valid @RequestBody AccountDetailsDtoImpl accountDetailsDto, BindingResult result) {
         if (result.hasErrors())
@@ -45,6 +47,9 @@ public class AccountDetailsRestController {
         return service.modifyAccountDetail(accountDetailsDto);
     }
 
-
+    @DeleteMapping("/accountDetails/{deleteAccountDetailId}")
+    public AccountDetailsDtoImpl deleteAccountDetail(@PathVariable("deleteAccountDetailId") Integer deleteId) {
+        return service.deleteAccountDetail(deleteId);
+    }
 
 }

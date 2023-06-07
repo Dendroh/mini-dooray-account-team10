@@ -1,9 +1,6 @@
 package com.example.minidoorayaccount.service;
 
-import com.example.minidoorayaccount.domain.AccountTeamBundleDtoImpl;
-import com.example.minidoorayaccount.domain.AccountTeamBundlePostRequest;
-import com.example.minidoorayaccount.domain.AccountTeamBundleUpdateRequest;
-import com.example.minidoorayaccount.domain.TeamCodeDtoImpl;
+import com.example.minidoorayaccount.domain.*;
 import com.example.minidoorayaccount.entity.AccountTeamBundle;
 import com.example.minidoorayaccount.exception.NotFoundAccountDetailsException;
 import com.example.minidoorayaccount.exception.NotFoundAccountTeamBundleException;
@@ -58,18 +55,22 @@ public class DefaultAccountTeamBundleService implements AccountTeamBundleService
 
 
     @Override
-    public AccountTeamBundleDtoImpl createAccountTeamBundle(AccountTeamBundlePostRequest accountTeamBundleDto) {
+    public AccountTeamBundleReqDto createAccountTeamBundle(AccountTeamBundleReqDto accountTeamBundleDto) {
         AccountTeamBundleDtoImpl dtoImpl = new AccountTeamBundleDtoImpl(new AccountTeamBundle.Pk(), null, null, null);
         dtoImpl.getPk().setTeamId(accountTeamBundleDto.getTeamId());
         dtoImpl.getPk().setAccountDetailsId(accountTeamBundleDto.getAccountId());
+        dtoImpl.setRegisterDate(LocalDateTime.now());
+
         AccountTeamBundle accountTeamBundle = converterToEntity(dtoImpl);
-        bundleRepository.saveAndFlush(accountTeamBundle);
-        return dtoImpl;
+        AccountTeamBundle bundle = bundleRepository.saveAndFlush(accountTeamBundle);
+
+        return new AccountTeamBundleReqDto(bundle.getPk().getTeamId(),
+                bundle.getPk().getAccountDetailsId(), dtoImpl.getRegisterDate());
     }
 
     @Override
     @Transactional
-    public AccountTeamBundleDtoImpl updateAccountTeamBundle(AccountTeamBundleUpdateRequest accountTeamBundleDto) {
+    public AccountTeamBundleReqDto updateAccountTeamBundle(AccountTeamBundleUpdateRequest accountTeamBundleDto) {
 
         AccountTeamBundleDtoImpl dto = new AccountTeamBundleDtoImpl(new AccountTeamBundle.Pk(),
                 accountDetailsRepository.getByAccountDetailsId(accountTeamBundleDto.getAccountId()),
@@ -97,17 +98,18 @@ public class DefaultAccountTeamBundleService implements AccountTeamBundleService
             bundleRepository.updateAccountTeamBundleByAccountId(dto, accountTeamBundleDto.getTeamId());
         }
 
-        return dto;
+        return new AccountTeamBundleReqDto(dto.getPk().getTeamId(),
+                dto.getPk().getAccountDetailsId(), dto.getRegisterDate());
     }
 
     @Override
     @Transactional
-    public AccountTeamBundlePostRequest deleteAccountTeamBundle(Integer deleteTeamId, Integer deleteAccountId) {
+    public AccountTeamBundleReqDto deleteAccountTeamBundle(Integer deleteTeamId, Integer deleteAccountId) {
         bundleRepository.deleteBundle(deleteTeamId, deleteAccountId);
-        AccountTeamBundlePostRequest dto = new AccountTeamBundlePostRequest();
+        AccountTeamBundleReqDto dto = new AccountTeamBundleReqDto(deleteTeamId, deleteAccountId, null);
         dto.setAccountId(deleteAccountId);
         dto.setTeamId(deleteTeamId);
-        return dto;
+        return new AccountTeamBundleReqDto(deleteTeamId, deleteAccountId, null);
     }
 
 
@@ -120,7 +122,7 @@ public class DefaultAccountTeamBundleService implements AccountTeamBundleService
 
         accountTeamBundle.setAccountDetails(accountDetailsRepository.getByAccountDetailsId(teamBundleDto.getPk().getAccountDetailsId()));
         accountTeamBundle.setTeamCode(teamCodeRepository.findByTeamId(teamBundleDto.getPk().getTeamId()));
-        accountTeamBundle.setRegisterDate(LocalDateTime.now());
+        accountTeamBundle.setRegisterDate(teamBundleDto.getRegisterDate());
 
         if (Objects.isNull(accountTeamBundle.getAccountDetails()))
             throw new NotFoundAccountDetailsException();

@@ -9,7 +9,11 @@ public interface AccountDetailsService {
 
     AccountDetailsDtoImpl getAccountDetailById(Integer accountId);
 
+    AccountDetailsDtoImpl getAccountDetailByName(String accountName);
+
     AccountDetailsDtoImpl createAccountDetail(AccountDetailsDtoImpl accountDetailsDto);
 
     AccountDetailsDtoImpl modifyAccountDetail(AccountDetailsDtoImpl accountDetailsDto);
+
+    AccountDetailsDtoImpl deleteAccountDetail(Integer deleteAccountDetailId);
 }
