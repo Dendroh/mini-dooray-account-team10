@@ -39,7 +39,6 @@ public class AccountTeamCodeBundleRepositoryImpl extends QuerydslRepositorySuppo
                 .where(teamCode.teamId.eq(bundleDto.getPk().getTeamId()))
                 .fetchFirst();
 
-
         update(accountTeamBundle)
                 .set(accountTeamBundle.pk.teamId, bundleDto.getPk().getTeamId())
                 .set(accountTeamBundle.registerDate, bundleDto.getRegisterDate())

@@ -18,6 +18,8 @@ public interface AccountDetailsRepository extends JpaRepository<AccountDetails, 
 
     List<AccountDetailsDtoImpl> findByIsDormant(Boolean isDormant);
 
+    List<AccountDetailsDtoImpl> findBy();
+
     List<AccountDetails> getByIsDormant(Boolean isDormant);
 
     @Override

@@ -1,17 +1,18 @@
 package com.example.minidoorayaccount.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
-@AllArgsConstructor
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class TeamCodeDtoImpl {
+public class AccountTeamBundlePostRequest {
+
+    @NotNull
     private Integer teamId;
 
-    @NotBlank
-    private String teamName;
+    @NotNull
+    private Integer accountId;
+
 }

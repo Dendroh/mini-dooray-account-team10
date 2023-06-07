@@ -7,17 +7,15 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@NamedEntityGraph(name = "accountDetailGraph", attributeNodes = {
-        @NamedAttributeNode(value = "account")
-})
 @Entity
 @Table(name = "account_details")
 @Getter
 @Setter
 @EqualsAndHashCode
-public class AccountDetails {
+public class AccountDetails implements Serializable {
     @Id
     @Column(name = "account_details_id")
     private Integer accountDetailsId;

@@ -1,18 +1,21 @@
 package com.example.minidoorayaccount.service;
 
 import com.example.minidoorayaccount.domain.AccountDto;
+import com.example.minidoorayaccount.domain.AccountDtoImpl;
 
 import java.util.List;
 
 public interface AccountService {
-    AccountDto createAccount();
+    AccountDtoImpl createAccount(AccountDtoImpl accountDto);
 
-    AccountDto getAccount(Integer id);
+    AccountDtoImpl getAccountById(Integer accountId);
+
+    AccountDtoImpl getAccountByEmail(String email);
 
     List<AccountDto> getAccounts();
 
-    AccountDto modifyAccount(AccountDto target);
+    AccountDtoImpl modifyAccount(AccountDtoImpl accountDto);
 
-    void deleteAccount();
+    Integer deleteAccount(Integer deleteId);
 
 }
