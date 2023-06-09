@@ -1,9 +1,6 @@
 package com.example.minidoorayaccount.controller;
 
-import com.example.minidoorayaccount.domain.AccountTeamBundleDtoImpl;
-import com.example.minidoorayaccount.domain.AccountTeamBundlePostRequest;
-import com.example.minidoorayaccount.domain.AccountTeamBundleUpdateRequest;
-import com.example.minidoorayaccount.domain.TeamCodeDtoImpl;
+import com.example.minidoorayaccount.domain.*;
 import com.example.minidoorayaccount.entity.AccountTeamBundle;
 import com.example.minidoorayaccount.exception.ValidationFailedException;
 import com.example.minidoorayaccount.service.AccountTeamBundleService;
@@ -33,7 +30,8 @@ public class AccountTeamBundleRestController {
 
 
     @PostMapping("/accountTeams/")
-    public AccountTeamBundleDtoImpl postAccountTeamBundle(@Valid @RequestBody AccountTeamBundlePostRequest accountTeamBundleDto, BindingResult result) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public AccountTeamBundleReqDto postAccountTeamBundle(@Valid @RequestBody AccountTeamBundleReqDto accountTeamBundleDto, BindingResult result) {
         if (result.hasErrors())
             throw new ValidationFailedException(result);
 
@@ -41,7 +39,7 @@ public class AccountTeamBundleRestController {
     }
 
     @PutMapping("/accountTeams/")
-    public AccountTeamBundleDtoImpl putAccountTeamBundle(@Valid @RequestBody AccountTeamBundleUpdateRequest request, BindingResult result) {
+    public AccountTeamBundleReqDto putAccountTeamBundle(@Valid @RequestBody AccountTeamBundleUpdateRequest request, BindingResult result) {
         if (result.hasErrors())
             throw new ValidationFailedException(result);
 
@@ -50,7 +48,7 @@ public class AccountTeamBundleRestController {
 
     @DeleteMapping("/accountTeams/{deleteTeamId}/{deleteAccountId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public AccountTeamBundlePostRequest deleteAccountTeamBundle(@PathVariable("deleteTeamId") Integer deleteTeamId, @PathVariable("deleteAccountId") Integer deleteAccountId) {
+    public AccountTeamBundleReqDto deleteAccountTeamBundle(@PathVariable("deleteTeamId") Integer deleteTeamId, @PathVariable("deleteAccountId") Integer deleteAccountId) {
         return service.deleteAccountTeamBundle(deleteTeamId, deleteAccountId);
     }
 

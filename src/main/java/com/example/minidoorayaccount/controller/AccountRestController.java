@@ -33,6 +33,7 @@ public class AccountRestController {
     }
 
     @PostMapping("/accounts/")
+    @ResponseStatus(HttpStatus.CREATED)
     public AccountDtoImpl postAccount(@Valid @RequestBody AccountDtoImpl accountDto, BindingResult result) {
         if (result.hasErrors())
             throw new ValidationFailedException(result);

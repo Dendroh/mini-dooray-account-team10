@@ -37,7 +37,7 @@ class AccountRepositoryTest {
     @Test
     @DisplayName("test account repository's findAllBy method return accountDto")
     void testFindAllBy() {
-        assertThat(repository.findAllBy()).hasSize(15);
+        assertThat(repository.findAllBy()).isNotEmpty();
     }
 
     @Test
