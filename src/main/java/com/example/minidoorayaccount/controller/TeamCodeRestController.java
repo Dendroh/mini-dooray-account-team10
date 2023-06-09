@@ -4,6 +4,7 @@ import com.example.minidoorayaccount.domain.TeamCodeDtoImpl;
 import com.example.minidoorayaccount.exception.ValidationFailedException;
 import com.example.minidoorayaccount.service.TeamCodeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,7 @@ public class TeamCodeRestController {
     }
 
     @PostMapping("/teams/")
+    @ResponseStatus(value = HttpStatus.CREATED)
     public TeamCodeDtoImpl postTeams(@Valid @RequestBody TeamCodeDtoImpl teamCodeDto, BindingResult result) {
         if (result.hasErrors())
             throw new ValidationFailedException(result);
@@ -37,6 +39,7 @@ public class TeamCodeRestController {
     }
 
     @DeleteMapping("/teams/{teamId}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public Integer deleteTeamsById(@PathVariable("teamId") Integer deleteTeamId) {
         return service.deleteTeamCodeById(deleteTeamId);
     }

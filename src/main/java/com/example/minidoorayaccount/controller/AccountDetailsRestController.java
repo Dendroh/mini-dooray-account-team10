@@ -4,6 +4,7 @@ import com.example.minidoorayaccount.domain.AccountDetailsDtoImpl;
 import com.example.minidoorayaccount.exception.ValidationFailedException;
 import com.example.minidoorayaccount.service.AccountDetailsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +33,7 @@ public class AccountDetailsRestController {
     }
 
     @PostMapping("/accountDetails/")
+    @ResponseStatus(value = HttpStatus.CREATED)
     public AccountDetailsDtoImpl postAccountDetail(@Valid @RequestBody AccountDetailsDtoImpl accountDetailsDto, BindingResult result) {
         if (result.hasErrors())
             throw new ValidationFailedException(result);
@@ -48,6 +50,7 @@ public class AccountDetailsRestController {
     }
 
     @DeleteMapping("/accountDetails/{deleteAccountDetailId}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public AccountDetailsDtoImpl deleteAccountDetail(@PathVariable("deleteAccountDetailId") Integer deleteId) {
         return service.deleteAccountDetail(deleteId);
     }

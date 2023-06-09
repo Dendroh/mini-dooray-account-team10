@@ -30,6 +30,7 @@ public class AccountTeamBundleRestController {
 
 
     @PostMapping("/accountTeams/")
+    @ResponseStatus(HttpStatus.CREATED)
     public AccountTeamBundleReqDto postAccountTeamBundle(@Valid @RequestBody AccountTeamBundleReqDto accountTeamBundleDto, BindingResult result) {
         if (result.hasErrors())
             throw new ValidationFailedException(result);
