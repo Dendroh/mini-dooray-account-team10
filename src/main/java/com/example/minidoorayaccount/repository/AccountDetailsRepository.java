@@ -16,6 +16,10 @@ public interface AccountDetailsRepository extends JpaRepository<AccountDetails, 
 
     AccountDetails getByName(String name);
 
+    AccountDetailsDtoImpl findByAccount_Email(String accountEmail);
+
+    AccountDetails getByAccount_Email(String accountEmail);
+
     List<AccountDetailsDtoImpl> findByIsDormant(Boolean isDormant);
 
     List<AccountDetailsDtoImpl> findBy();

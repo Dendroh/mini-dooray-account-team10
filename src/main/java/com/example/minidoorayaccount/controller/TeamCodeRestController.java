@@ -1,6 +1,7 @@
 package com.example.minidoorayaccount.controller;
 
 import com.example.minidoorayaccount.domain.TeamCodeDtoImpl;
+import com.example.minidoorayaccount.domain.TeamCodeUpdateReq;
 import com.example.minidoorayaccount.exception.ValidationFailedException;
 import com.example.minidoorayaccount.service.TeamCodeService;
 import lombok.RequiredArgsConstructor;
@@ -31,17 +32,17 @@ public class TeamCodeRestController {
     }
 
     @PutMapping("/teams/")
-    public TeamCodeDtoImpl putTeamsById(@Valid @RequestBody TeamCodeDtoImpl teamCodeDto, BindingResult result) {
+    public TeamCodeDtoImpl putTeamsById(@Valid @RequestBody TeamCodeUpdateReq teamCodeDto, BindingResult result) {
         if (result.hasErrors())
             throw new ValidationFailedException(result);
 
         return service.updateTeamCodeById(teamCodeDto);
     }
 
-    @DeleteMapping("/teams/{teamId}")
+    @DeleteMapping("/teams/{deleteTeamName}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public Integer deleteTeamsById(@PathVariable("teamId") Integer deleteTeamId) {
-        return service.deleteTeamCodeById(deleteTeamId);
+    public void deleteTeamsById(@PathVariable("deleteTeamName") String deleteTeamName) {
+        service.deleteTeamCodeById(deleteTeamName);
     }
 
 }

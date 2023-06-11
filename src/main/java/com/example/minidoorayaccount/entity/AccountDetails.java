@@ -26,6 +26,7 @@ public class AccountDetails implements Serializable {
     @MapsId(value = "accountDetailsId")
     private Account account;
 
+    @Column(unique = true, nullable = false)
     private String name;
 
     @Column(name = "image_file_name")

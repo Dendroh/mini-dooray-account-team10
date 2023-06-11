@@ -1,6 +1,8 @@
 package com.example.minidoorayaccount.service;
 
 import com.example.minidoorayaccount.domain.AccountDetailsDtoImpl;
+import com.example.minidoorayaccount.domain.AccountDetailsPostReq;
+import com.example.minidoorayaccount.domain.AccountDetailsUpdateReq;
 
 import java.util.List;
 
@@ -11,9 +13,11 @@ public interface AccountDetailsService {
 
     AccountDetailsDtoImpl getAccountDetailByName(String accountName);
 
-    AccountDetailsDtoImpl createAccountDetail(AccountDetailsDtoImpl accountDetailsDto);
+    AccountDetailsDtoImpl getAccountDetailByEmail(String email);
 
-    AccountDetailsDtoImpl modifyAccountDetail(AccountDetailsDtoImpl accountDetailsDto);
+    AccountDetailsDtoImpl createAccountDetail(AccountDetailsPostReq accountDetailsDto);
 
-    AccountDetailsDtoImpl deleteAccountDetail(Integer deleteAccountDetailId);
+    AccountDetailsDtoImpl modifyAccountDetail(AccountDetailsUpdateReq accountDetailsDto);
+
+    void deleteAccountDetail(String deleteAccountEmail);
 }

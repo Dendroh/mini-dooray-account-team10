@@ -2,6 +2,7 @@ package com.example.minidoorayaccount.controller;
 
 import com.example.minidoorayaccount.domain.AccountDto;
 import com.example.minidoorayaccount.domain.AccountDtoImpl;
+import com.example.minidoorayaccount.domain.AccountUpdateReq;
 import com.example.minidoorayaccount.exception.ValidationFailedException;
 import com.example.minidoorayaccount.service.AccountService;
 import lombok.RequiredArgsConstructor;
@@ -42,17 +43,17 @@ public class AccountRestController {
     }
 
     @PutMapping("/accounts/")
-    public AccountDtoImpl putAccount(@Valid @RequestBody AccountDtoImpl accountDto, BindingResult result) {
+    public AccountDtoImpl putAccount(@Valid @RequestBody AccountUpdateReq accountDto, BindingResult result) {
         if (result.hasErrors())
             throw new ValidationFailedException(result);
 
         return service.modifyAccount(accountDto);
     }
 
-    @DeleteMapping("/accounts/{deleteId}")
+    @DeleteMapping("/accounts/{deleteEmail}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public Integer deleteAccountById(@PathVariable("deleteId") Integer deleteId) {
-        return service.deleteAccount(deleteId);
+    public void deleteAccountById(@PathVariable("deleteEmail") String deleteEmail) {
+        service.deleteAccount(deleteEmail);
     }
 
 }

@@ -1,6 +1,8 @@
 package com.example.minidoorayaccount.service;
 
 import com.example.minidoorayaccount.domain.AccountDetailsDtoImpl;
+import com.example.minidoorayaccount.domain.AccountDetailsPostReq;
+import com.example.minidoorayaccount.domain.AccountDetailsUpdateReq;
 import com.example.minidoorayaccount.entity.Account;
 import com.example.minidoorayaccount.entity.AccountDetails;
 import com.example.minidoorayaccount.exception.NotFoundAccountDetailsException;
@@ -48,20 +50,46 @@ public class DefaultAccountDetailsService implements AccountDetailsService {
         return accountTeamBundleDto;
     }
 
+    @Override
+    public AccountDetailsDtoImpl getAccountDetailByEmail(String email) {
+        Account account = accountRepository.getByEmail(email);
+
+        if (Objects.isNull(account))
+            throw new NotFoundAccountException();
+
+        AccountDetailsDtoImpl accountDetailsDto = detailsRepository.findByAccountDetailsId(account.getAccountId());
+
+        if (Objects.isNull(accountDetailsDto))
+            throw new NotFoundAccountDetailsException();
+
+        return accountDetailsDto;
+    }
+
 
     @Override
-    public AccountDetailsDtoImpl createAccountDetail(AccountDetailsDtoImpl accountDetailsDto) {
-        accountDetailsDto.setImageFileName(accountDetailsDto.getName() + ".png");
-        accountDetailsDto.setRegisterDate(LocalDateTime.now());
-        accountDetailsDto.setIsDormant(false);
-        return converterToDtoImpl(detailsRepository.saveAndFlush(converterToEntity(accountDetailsDto)));
+    public AccountDetailsDtoImpl createAccountDetail(AccountDetailsPostReq accountDetailsDto) {
+        Account account = accountRepository.getByEmail(accountDetailsDto.getAccountEmail());
+
+        if (Objects.isNull(account))
+            throw new NotFoundAccountException();
+
+        AccountDetailsDtoImpl detailsDto = new AccountDetailsDtoImpl(account.getAccountId(),
+                accountDetailsDto.getName(), accountDetailsDto.getName() + ".png",
+                false, LocalDateTime.now().plusHours(9));
+
+        return converterToDtoImpl(detailsRepository.saveAndFlush(converterToEntity(detailsDto)));
     }
 
 
     @Override
     @Transactional
-    public AccountDetailsDtoImpl modifyAccountDetail(AccountDetailsDtoImpl accountDetailsDto) {
-        AccountDetailsDtoImpl accountDetailImpl = detailsRepository.findByAccountDetailsId(accountDetailsDto.getAccountDetailsId());
+    public AccountDetailsDtoImpl modifyAccountDetail(AccountDetailsUpdateReq accountDetailsDto) {
+        Account account = accountRepository.getByEmail(accountDetailsDto.getAccountEmail());
+
+        if (Objects.isNull(account))
+            throw new NotFoundAccountException();
+
+        AccountDetailsDtoImpl accountDetailImpl = detailsRepository.findByAccountDetailsId(account.getAccountId());
 
         if (Objects.isNull(accountDetailImpl))
             throw new NotFoundAccountDetailsException();
@@ -78,9 +106,14 @@ public class DefaultAccountDetailsService implements AccountDetailsService {
 
     @Override
     @Transactional
-    public AccountDetailsDtoImpl deleteAccountDetail(Integer deleteAccountDetailId) {
-        detailsRepository.deleteAccountDetails(deleteAccountDetailId);
-        return new AccountDetailsDtoImpl(deleteAccountDetailId, null, null, null, null);
+    public void deleteAccountDetail(String deleteAccountEmail) {
+
+        Account account  = accountRepository.getByEmail(deleteAccountEmail);
+
+        if (Objects.isNull(account))
+            throw new NotFoundAccountException();
+
+        detailsRepository.deleteAccountDetails(account.getAccountId());
     }
 
 

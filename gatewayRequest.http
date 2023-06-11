@@ -3,14 +3,14 @@
 
 # account api1. test용 - 모든 계정 확인
 GET /accounts
-Host:localhost:9090
+Host:localhost:8081
 
 ###
 
 # account api2. GET /accounts/{accountId}
 # : accountId로 단일 account 조회
 GET /accounts/5
-Host:localhost:9090
+Host:localhost:8081
 
 
 ###
@@ -18,8 +18,8 @@ Host:localhost:9090
 # account api3. GET /accounts/email/{accountEmail}
 # : accountEmail로 단일 account 조회
 
-GET /accounts/email/example5%40gmail.com
-Host:localhost:9090
+GET /accounts/email/example1212%40gmail.com
+Host:localhost:8081
 
 ###
 
@@ -28,7 +28,7 @@ Host:localhost:9090
 
 POST /accounts/
 Content-Type: application/json
-Host:localhost:9090
+Host:localhost:8081
 
 {
   "email": "example99@gmail.com",
@@ -38,83 +38,97 @@ Host:localhost:9090
 ###
 
 # account api5. PUT /accounts/
-# : requestbody(accountId, email, password)로 단일 account 수정
+# : requestbody(beforeEmail, afterEmail, password)로 단일 account 수정
 PUT /accounts/
 Content-Type: application/json
-Host:localhost:9090
+Host:localhost:8081
 
 {
-  "accountId": 16,
-  "email": "example",
+  "beforeEmail": "example99@gmail.com",
+  "afterEmail": "example1212@gmail.com",
   "password": "$2a$10$HXhQhbKjkcrVDTIEu5..vevGdlW5KBek7MhNlmY7ZugtTYzlezLEK"
 }
 
 ###
 
-# account api6. DELETE /accounts/{accountId}
+# account api6. DELETE /accounts/{accountEmail}
 # : accountId로 단일 account 삭제
-DELETE /accounts/16
-Host:localhost:9090
+DELETE /accounts/example1212@gmail.com
+Host:localhost:8081
 
 
 
 ###
 ### accountDetails API request
 
-# accountDetails api1. GET /accountDetails
-# : requestbody(accountId, email, password)로 단일 account 수정
+# accountDetails api1. GET /accountDetails - test
+# : 모든 계정의 세부정보 확인
 GET /accountDetails
-Host:localhost:9090
+Host:localhost:8081
 
 ###
 
 # accountDetails api2. GET /accountDetails/{accountDetailsId} (= accountId)
-# : requestbody(accountId, email, password)로 단일 account 수정
-GET /accountDetails/4
-Host:localhost:9090
+# : accountDetailsId 로 단일 accountDetail 조회
+GET /accountDetails/121
+Host:localhost:8081
 
 ###
 
-# accountDetails api3. POST /accountDetails
-# : requestbody(accountDetailsId, name)로 단일 accountDetails 수정
+# accountDetails api3. GET /accountDetails/{email}
+# : accountEmail 로 단일 accountDetail 조회
+GET /accountDetails/email/
+Host:localhost:8081
+
+###
+
+# accountDetails api4. GET /accountDetails/{accountDetailsName}
+# : accountDetailsName 으로 단일 accountDetail 조회
+GET /accountDetails/name/name2
+Host:localhost:8081
+
+###
+
+# accountDetails api5. POST /accountDetails
+# : requestbody(accountEmail(notBlank), name)로 단일 accountDetails 추가
 POST /accountDetails/
 Content-Type: application/json
-Host:localhost:9090
+Host:localhost:8081
 
 {
-  "accountDetailsId": 104,
+  "accountEmail": "1",
   "name": "name104"
 }
 
 ###
 
-# accountDetails api4. PUT /accountDetails
-# : requestbody(accountDetailsId, name, isDormant)로 단일 accountDetails 수정
+# accountDetails api6. PUT /accountDetails
+# : requestbody(accountEmail(notBlank), name, isDormant)로 단일 accountDetails 수정
 PUT /accountDetails/
 Content-Type: application/json
-Host:localhost:9090
+Host:localhost:8081
 
 {
-  "accountDetailsId": 104,
+  "accountEmail": "1",
   "name": "name1111",
   "isDormant": true
 }
 
 ###
 
-# accountDetails api5. DELETE /accountDetails/{deleteAccountDetailId}
-# : deleteAccountDetailId로 단일 accountDetails 삭제
-DELETE /accountDetails/104
-Host:localhost:9090
+# accountDetails api7. DELETE /accountDetails/{deleteAccountEmail}
+# : deleteAccountEmail로 단일 accountDetails 삭제
+DELETE /accountDetails/1
+Host:localhost:8081
 
 ###
 ### teamCode API request
 
 # team api1. GET /teams/{teamName}
 # : teamName으로 teamCode 조회
-GET /teams/민트초코 불매단
+GET /teams/Team3
 Content-Type: application/json
-Host:localhost:9090
+Host:localhost:8081
 
 ###
 
@@ -122,31 +136,31 @@ Host:localhost:9090
 # : requestbody(teamName)로 단일 teamCode 추가
 POST /teams/
 Content-Type: application/json
-Host:localhost:9090
+Host:localhost:8081
 
 {
-  "teamName": "제육볶음 러버즈"
-}
-
-###
-
-# team api3. PUT /teams
-# : requestbody(teamId, teamName)로 단일 teamCode 수정
-PUT /teams/
-Content-Type: application/json
-Host:localhost:9090
-
-{
-  "teamId": 28,
   "teamName": "치킨 러버즈"
 }
 
 ###
 
-# team api4. DELETE /teams
-# : teamId로 단일 teamCode 삭제
-DELETE /teams/{teamId}
-Host: localhost:9090
+# team api3. PUT /teams
+# : requestbody(beforeTeamName, afterTeamName)로 단일 teamCode 수정
+PUT /teams/
+Content-Type: application/json
+Host:localhost:8081
+
+{
+  "beforeTeamName": "치킨 러버즈",
+  "afterTeamName": "민트초코 불매단"
+}
+
+###
+
+# team api4. DELETE /teams/{deleteTeamName}
+# : deleteTeamName 으로 단일 teamCode 삭제
+DELETE /teams/민트초코 불매단
+Host: localhost:8081
 
 
 
@@ -156,47 +170,54 @@ Host: localhost:9090
 # accountTeamCodeBundle api1. GET /accountTeams/id/{accountId}
 # : accountId로 복수 teamCode 조회 (account가 속한 팀 조회)
 GET /accountTeams/id/4
-Host: localhost:9090
+Host: localhost:8081
 
 ###
 
 # accountTeamCodeBundle api2. GET /accountTeams/name/{accountName}
 # : accountName으로 복수 teamCode 조회 (account가 속한 팀 조회)
-GET /accountTeams/name/name10
-Host: localhost:9090
+GET /accountTeams/name/name4
+Host: localhost:8081
 
 ###
 
-# accountTeamCodeBundle api3. POST /accountTeams
-# : postRequestbody(teamId, accountId)로 단일 accountTeamBundle 추가
+# accountTeamCodeBundle api3. GET /accountTeams/email/{accountEmail}
+# : accountEmail로 복수 teamCode 조회 (account가 속한 팀 조회)
+GET /accountTeams/email/example8@gmail.com
+Host: localhost:8081
+
+###
+
+# accountTeamCodeBundle api4. POST /accountTeams
+# : postRequestbody(email, teamName)로 단일 accountTeamBundle 추가
 
 POST /accountTeams/
 Content-Type: application/json
-Host:localhost:9090
+Host:localhost:8081
 
 {
-  "accountId": 4,
-  "teamId": 28
+  "email": "example8@gmail.com",
+  "teamName": "Team3"
 }
 
 ###
 
-# accountTeamCodeBundle api3. POST /accountTeams
-# : updateRequestbody(teamId, accountId, newTeamId, newAccountId)로 단일 accountTeamBundle's teamId or accountId, registerDate 수정
+# accountTeamCodeBundle api5. POST /accountTeams
+# : updateRequestbody(teamName, email, newTeamName, newEmail)로 단일 accountTeamBundle's teamId or accountId, registerDate 수정
 PUT /accountTeams/
 Content-Type: application/json
-Host:localhost:9090
+Host:localhost:8081
 
 {
-  "teamId": 28,
-  "accountId": 4,
-  "newTeamId": 6
+  "teamName": "Team3",
+  "email": "example8@gmail.com",
+  "newEmail": "example7@gmail.com"
 }
 
 ###
 
-# accountTeamCodeBundle api4. DELETE /accountTeams/{deleteTeamId}/{deleteAccountId}
-# : deleteTeamId, deleteAccountId로 단일 accountTeamBundle 삭제
+# accountTeamCodeBundle api6. DELETE /accountTeams/{deleteTeamName}/{deleteAccountEmail}
+# : deleteTeamName, deleteAccountEmail로 단일 accountTeamBundle 삭제
 
-DELETE /accountTeams/28/4
-Host:localhost:9090
+DELETE /accountTeams/Team3/example7@gmail.com
+Host:localhost:8081

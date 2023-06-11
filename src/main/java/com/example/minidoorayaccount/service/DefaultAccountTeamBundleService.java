@@ -1,8 +1,11 @@
 package com.example.minidoorayaccount.service;
 
 import com.example.minidoorayaccount.domain.*;
+import com.example.minidoorayaccount.entity.AccountDetails;
 import com.example.minidoorayaccount.entity.AccountTeamBundle;
+import com.example.minidoorayaccount.entity.TeamCode;
 import com.example.minidoorayaccount.exception.NotFoundAccountDetailsException;
+import com.example.minidoorayaccount.exception.NotFoundAccountException;
 import com.example.minidoorayaccount.exception.NotFoundAccountTeamBundleException;
 import com.example.minidoorayaccount.exception.NotFoundTeamCodeException;
 import com.example.minidoorayaccount.repository.AccountDetailsRepository;
@@ -53,63 +56,91 @@ public class DefaultAccountTeamBundleService implements AccountTeamBundleService
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<TeamCodeDtoImpl> getTeamNamesByAccountEmail(String accountEmail) {
+
+        AccountDetailsDtoImpl accountByEmail = accountDetailsRepository.findByAccount_Email(accountEmail);
+
+        if (Objects.isNull(accountByEmail))
+            throw new NotFoundAccountException();
+
+        return bundleRepository.findByAccountDetails_AccountDetailsId(accountByEmail.getAccountDetailsId()).stream()
+                .map(AccountTeamBundle::getTeamCode)
+                .map(DefaultTeamCodeService::converterToDtoImpl)
+                .collect(Collectors.toList());
+    }
+
 
     @Override
-    public AccountTeamBundleReqDto createAccountTeamBundle(AccountTeamBundleReqDto accountTeamBundleDto) {
-        AccountTeamBundleDtoImpl dtoImpl = new AccountTeamBundleDtoImpl(new AccountTeamBundle.Pk(), null, null, null);
-        dtoImpl.getPk().setTeamId(accountTeamBundleDto.getTeamId());
-        dtoImpl.getPk().setAccountDetailsId(accountTeamBundleDto.getAccountId());
-        dtoImpl.setRegisterDate(LocalDateTime.now());
+    public AccountTeamBundleRespDto createAccountTeamBundle(AccountTeamCodeBundlePostReq accountTeamBundleDto) {
+
+        AccountDetails accountDetails = checkNullAndGetAccountDetailsByEmail(accountTeamBundleDto.getEmail());
+        TeamCode teamCode = checkNullAndGetTeamCodeByTeamName(accountTeamBundleDto.getTeamName());
+
+        AccountTeamBundleDtoImpl dtoImpl = new AccountTeamBundleDtoImpl(new AccountTeamBundle.Pk(),
+                accountDetails, teamCode, LocalDateTime.now().plusHours(9));
+
+        dtoImpl.getPk().setTeamId(teamCode.getTeamId());
+        dtoImpl.getPk().setAccountDetailsId(accountDetails.getAccountDetailsId());
 
         AccountTeamBundle accountTeamBundle = converterToEntity(dtoImpl);
-        AccountTeamBundle bundle = bundleRepository.saveAndFlush(accountTeamBundle);
+        bundleRepository.saveAndFlush(accountTeamBundle);
 
-        return new AccountTeamBundleReqDto(bundle.getPk().getTeamId(),
-                bundle.getPk().getAccountDetailsId(), dtoImpl.getRegisterDate());
+        return new AccountTeamBundleRespDto(null, null, dtoImpl.getRegisterDate(),
+                dtoImpl.getTeamCode().getTeamName(), dtoImpl.getAccountDetails().getAccount().getEmail());
     }
 
     @Override
     @Transactional
-    public AccountTeamBundleReqDto updateAccountTeamBundle(AccountTeamBundleUpdateRequest accountTeamBundleDto) {
+    public AccountTeamBundleRespDto updateAccountTeamBundle(AccountTeamBundleUpdateReq accountTeamBundleDto) {
+
+        AccountDetails accountDetails = checkNullAndGetAccountDetailsByEmail(accountTeamBundleDto.getEmail());
+        TeamCode teamCode = checkNullAndGetTeamCodeByTeamName(accountTeamBundleDto.getTeamName());
 
         AccountTeamBundleDtoImpl dto = new AccountTeamBundleDtoImpl(new AccountTeamBundle.Pk(),
-                accountDetailsRepository.getByAccountDetailsId(accountTeamBundleDto.getAccountId()),
-                teamCodeRepository.findByTeamId(accountTeamBundleDto.getNewTeamId()),
-                LocalDateTime.now());
+                null, null, LocalDateTime.now().plusHours(9));
 
-        if (Objects.isNull(bundleRepository.queryByTeamCode_TeamIdAndAccountDetails_AccountDetailsId(accountTeamBundleDto.getTeamId(), accountTeamBundleDto.getAccountId())))
+        if (Objects.isNull(bundleRepository.queryByTeamCode_TeamIdAndAccountDetails_AccountDetailsId(teamCode.getTeamId(), accountDetails.getAccountDetailsId())))
             throw new NotFoundAccountTeamBundleException();
 
-        if (Objects.isNull(accountTeamBundleDto.getNewTeamId())) {
+        if (Objects.isNull(accountTeamBundleDto.getNewTeamName())) {
 
-            dto.getPk().setTeamId(accountTeamBundleDto.getTeamId());
-            dto.getPk().setAccountDetailsId(accountTeamBundleDto.getNewAccountId());
-            dto.setRegisterDate(LocalDateTime.now());
+            AccountDetails accountDetailsByNewEmail = checkNullAndGetAccountDetailsByEmail(accountTeamBundleDto.getNewEmail());
 
-            bundleRepository.updateAccountTeamBundleByTeamId(dto, accountTeamBundleDto.getAccountId());
+            dto.getPk().setTeamId(teamCode.getTeamId());
+            dto.getPk().setAccountDetailsId(accountDetailsByNewEmail.getAccountDetailsId());
+            dto.setAccountDetails(accountDetailsByNewEmail);
+            dto.setTeamCode(teamCode);
+            dto.setRegisterDate(LocalDateTime.now().plusHours(9));
+
+            bundleRepository.updateAccountTeamBundleByTeamId(dto, accountDetails.getAccountDetailsId());
         }
 
-        if (Objects.isNull(accountTeamBundleDto.getNewAccountId())) {
+        if (Objects.isNull(accountTeamBundleDto.getNewEmail())) {
 
-            dto.getPk().setAccountDetailsId(accountTeamBundleDto.getAccountId());
-            dto.getPk().setTeamId(accountTeamBundleDto.getNewTeamId());
-            dto.setRegisterDate(LocalDateTime.now());
+            TeamCode teamCodeByNewTeamName = checkNullAndGetTeamCodeByTeamName(accountTeamBundleDto.getNewTeamName());
 
-            bundleRepository.updateAccountTeamBundleByAccountId(dto, accountTeamBundleDto.getTeamId());
+            dto.getPk().setAccountDetailsId(accountDetails.getAccountDetailsId());
+            dto.getPk().setTeamId(teamCodeByNewTeamName.getTeamId());
+            dto.setAccountDetails(accountDetails);
+            dto.setTeamCode(teamCodeByNewTeamName);
+            dto.setRegisterDate(LocalDateTime.now().plusHours(9));
+
+            bundleRepository.updateAccountTeamBundleByAccountId(dto, teamCode.getTeamId());
         }
 
-        return new AccountTeamBundleReqDto(dto.getPk().getTeamId(),
-                dto.getPk().getAccountDetailsId(), dto.getRegisterDate());
+        return new AccountTeamBundleRespDto(null,
+                null, dto.getRegisterDate(), dto.getTeamCode().getTeamName(), dto.getAccountDetails().getAccount().getEmail());
     }
 
     @Override
     @Transactional
-    public AccountTeamBundleReqDto deleteAccountTeamBundle(Integer deleteTeamId, Integer deleteAccountId) {
-        bundleRepository.deleteBundle(deleteTeamId, deleteAccountId);
-        AccountTeamBundleReqDto dto = new AccountTeamBundleReqDto(deleteTeamId, deleteAccountId, null);
-        dto.setAccountId(deleteAccountId);
-        dto.setTeamId(deleteTeamId);
-        return new AccountTeamBundleReqDto(deleteTeamId, deleteAccountId, null);
+    public void deleteAccountTeamBundle(String deleteTeamName, String deleteAccountEmail) {
+
+        TeamCode teamCode = checkNullAndGetTeamCodeByTeamName(deleteTeamName);
+        AccountDetails accountDetails = checkNullAndGetAccountDetailsByEmail(deleteAccountEmail);
+
+        bundleRepository.deleteBundle(teamCode.getTeamId(), accountDetails.getAccountDetailsId());
     }
 
 
@@ -131,6 +162,24 @@ public class DefaultAccountTeamBundleService implements AccountTeamBundleService
             throw new NotFoundTeamCodeException();
 
         return accountTeamBundle;
+    }
+
+    private AccountDetails checkNullAndGetAccountDetailsByEmail(String email) {
+        AccountDetails accountDetails = accountDetailsRepository.getByAccount_Email(email);
+
+        if (Objects.isNull(accountDetails))
+            throw new NotFoundAccountDetailsException();
+
+        return accountDetails;
+    }
+
+    private TeamCode checkNullAndGetTeamCodeByTeamName(String teamName) {
+        TeamCode teamCode = teamCodeRepository.findByTeamName(teamName);
+
+        if (Objects.isNull(teamCode))
+            throw new NotFoundTeamCodeException();
+
+        return teamCode;
     }
 
 }

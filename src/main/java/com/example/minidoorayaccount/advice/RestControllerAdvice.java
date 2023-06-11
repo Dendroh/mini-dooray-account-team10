@@ -6,12 +6,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 @org.springframework.web.bind.annotation.RestControllerAdvice
 public class RestControllerAdvice {
-    @ExceptionHandler(ValidationFailedException.class)
+    @ExceptionHandler({ValidationFailedException.class, MethodArgumentTypeMismatchException.class, SQLIntegrityConstraintViolationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ExceptionRequest validationFailed(Exception ig, HttpServletRequest req) {

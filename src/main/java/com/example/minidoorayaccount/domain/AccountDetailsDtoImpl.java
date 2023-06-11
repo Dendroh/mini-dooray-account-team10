@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class AccountDetailsDtoImpl {
+public class AccountDetailsDtoImpl implements AccountDetailsDto {
     private Integer accountDetailsId;
     @NotBlank
     private String name;

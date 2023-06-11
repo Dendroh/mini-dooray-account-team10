@@ -2,6 +2,7 @@ package com.example.minidoorayaccount.service;
 
 import com.example.minidoorayaccount.domain.AccountDto;
 import com.example.minidoorayaccount.domain.AccountDtoImpl;
+import com.example.minidoorayaccount.domain.AccountUpdateReq;
 import com.example.minidoorayaccount.entity.Account;
 import com.example.minidoorayaccount.exception.NotFoundAccountException;
 import com.example.minidoorayaccount.repository.AccountRepository;
@@ -9,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.security.auth.login.AccountException;
 import java.util.List;
 import java.util.Objects;
 
@@ -51,24 +51,34 @@ public class DefaultAccountService implements AccountService {
 
     @Override
     @Transactional
-    public AccountDtoImpl modifyAccount(AccountDtoImpl accountDto) {
-        if (Objects.isNull(repository.getByAccountId(accountDto.getAccountId())))
+    public AccountDtoImpl modifyAccount(AccountUpdateReq accountDto) {
+
+        AccountDtoImpl updateDto = repository.queryByEmail(accountDto.getBeforeEmail());
+
+        if (Objects.isNull(updateDto))
             throw new NotFoundAccountException();
 
-        repository.updateAccount(accountDto);
-        return repository.queryByAccountId(accountDto.getAccountId());
+        updateDto.setEmail(accountDto.getAfterEmail());
+        updateDto.setPassword(accountDto.getPassword());
+
+        repository.updateAccount(updateDto);
+
+        return updateDto;
     }
 
     @Override
     @Transactional
-    public Integer deleteAccount(Integer deleteId) {
-        repository.deleteAccountById(deleteId);
-        return deleteId;
+    public void deleteAccount(String deleteEmail) {
+        Account deleteAccount = repository.getByEmail(deleteEmail);
+
+        if (Objects.isNull(deleteAccount))
+            throw new NotFoundAccountException();
+
+        repository.deleteAccountById(deleteAccount.getAccountId());
     }
 
     public static Account converterToEntity(AccountDtoImpl accountDto) {
         Account account = new Account();
-        account.setAccountId(account.getAccountId());
         account.setEmail(accountDto.getEmail());
         account.setPassword(accountDto.getPassword());
 

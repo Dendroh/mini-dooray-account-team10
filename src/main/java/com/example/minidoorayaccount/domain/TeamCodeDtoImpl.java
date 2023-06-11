@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @AllArgsConstructor
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class TeamCodeDtoImpl {
+public final class TeamCodeDtoImpl implements TeamCodeDto {
     private Integer teamId;
 
     @NotBlank
