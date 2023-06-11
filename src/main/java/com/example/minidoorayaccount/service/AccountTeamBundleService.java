@@ -9,10 +9,12 @@ public interface AccountTeamBundleService {
 
     List<TeamCodeDtoImpl> getTeamNamesByAccountName(String accountName);
 
-    AccountTeamBundleReqDto createAccountTeamBundle(AccountTeamBundleReqDto accountTeamBundleDto);
+    List<TeamCodeDtoImpl> getTeamNamesByAccountEmail(String accountEmail);
 
-    AccountTeamBundleReqDto updateAccountTeamBundle(AccountTeamBundleUpdateRequest accountTeamBundleDto);
+    AccountTeamBundleRespDto createAccountTeamBundle(AccountTeamCodeBundlePostReq accountTeamBundleDto);
 
-    AccountTeamBundleReqDto deleteAccountTeamBundle(Integer deleteTeamId, Integer deleteAccountId);
+    AccountTeamBundleRespDto updateAccountTeamBundle(AccountTeamBundleUpdateReq accountTeamBundleDto);
+
+    void deleteAccountTeamBundle(String deleteTeamName, String deleteAccountEmail);
 
 }

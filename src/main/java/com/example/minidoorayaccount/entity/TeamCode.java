@@ -18,7 +18,7 @@ public class TeamCode implements Serializable {
     @Column(name = "team_id")
     private Integer teamId;
 
-    @Column(name = "team_name")
+    @Column(name = "team_name", unique = true)
     private String teamName;
 
 }

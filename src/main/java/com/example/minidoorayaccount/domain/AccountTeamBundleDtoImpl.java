@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Data
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class AccountTeamBundleDtoImpl {
+public final class AccountTeamBundleDtoImpl implements AccountTeamBundleDto {
     private AccountTeamBundle.Pk pk;
 
     private AccountDetails accountDetails;

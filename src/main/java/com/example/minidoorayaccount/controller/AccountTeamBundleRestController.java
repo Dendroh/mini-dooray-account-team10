@@ -1,7 +1,6 @@
 package com.example.minidoorayaccount.controller;
 
 import com.example.minidoorayaccount.domain.*;
-import com.example.minidoorayaccount.entity.AccountTeamBundle;
 import com.example.minidoorayaccount.exception.ValidationFailedException;
 import com.example.minidoorayaccount.service.AccountTeamBundleService;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +27,14 @@ public class AccountTeamBundleRestController {
         return service.getTeamNamesByAccountName(accountName);
     }
 
+    @GetMapping("/accountTeams/email/{accountEmail}")
+    public List<TeamCodeDtoImpl> getTeamNamesByAccountEmail(@PathVariable("accountEmail") String accountEmail) {
+        return service.getTeamNamesByAccountEmail(accountEmail);
+    }
 
     @PostMapping("/accountTeams/")
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountTeamBundleReqDto postAccountTeamBundle(@Valid @RequestBody AccountTeamBundleReqDto accountTeamBundleDto, BindingResult result) {
+    public AccountTeamBundleRespDto postAccountTeamBundle(@Valid @RequestBody AccountTeamCodeBundlePostReq accountTeamBundleDto, BindingResult result) {
         if (result.hasErrors())
             throw new ValidationFailedException(result);
 
@@ -39,17 +42,17 @@ public class AccountTeamBundleRestController {
     }
 
     @PutMapping("/accountTeams/")
-    public AccountTeamBundleReqDto putAccountTeamBundle(@Valid @RequestBody AccountTeamBundleUpdateRequest request, BindingResult result) {
+    public AccountTeamBundleRespDto putAccountTeamBundle(@Valid @RequestBody AccountTeamBundleUpdateReq request, BindingResult result) {
         if (result.hasErrors())
             throw new ValidationFailedException(result);
 
         return service.updateAccountTeamBundle(request);
     }
 
-    @DeleteMapping("/accountTeams/{deleteTeamId}/{deleteAccountId}")
+    @DeleteMapping("/accountTeams/{deleteTeamName}/{deleteAccountEmail}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public AccountTeamBundleReqDto deleteAccountTeamBundle(@PathVariable("deleteTeamId") Integer deleteTeamId, @PathVariable("deleteAccountId") Integer deleteAccountId) {
-        return service.deleteAccountTeamBundle(deleteTeamId, deleteAccountId);
+    public void deleteAccountTeamBundle(@PathVariable("deleteTeamName") String deleteTeamName, @PathVariable("deleteAccountEmail") String deleteAccountEmail) {
+        service.deleteAccountTeamBundle(deleteTeamName, deleteAccountEmail);
     }
 
 }

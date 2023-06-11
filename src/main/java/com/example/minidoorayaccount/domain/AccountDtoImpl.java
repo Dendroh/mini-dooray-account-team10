@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class AccountDtoImpl {
+public final class AccountDtoImpl implements AccountDto {
     private Integer accountId;
 
     @NotBlank

@@ -1,6 +1,7 @@
 package com.example.minidoorayaccount.service;
 
 import com.example.minidoorayaccount.domain.TeamCodeDtoImpl;
+import com.example.minidoorayaccount.domain.TeamCodeUpdateReq;
 
 public interface TeamCodeService {
 
@@ -10,7 +11,7 @@ public interface TeamCodeService {
 
     TeamCodeDtoImpl createTeamCode(TeamCodeDtoImpl newTeamCode);
 
-    TeamCodeDtoImpl updateTeamCodeById(TeamCodeDtoImpl updateTeamCode);
+    TeamCodeDtoImpl updateTeamCodeById(TeamCodeUpdateReq updateTeamCode);
 
-    Integer deleteTeamCodeById(Integer deleteTeamId);
+    void deleteTeamCodeById(String deleteTeamName);
 }

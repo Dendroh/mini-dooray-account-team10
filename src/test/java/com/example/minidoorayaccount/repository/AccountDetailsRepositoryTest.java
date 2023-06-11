@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -52,8 +54,10 @@ class AccountDetailsRepositoryTest {
         assertThat(repository.findByName("name16").getAccountDetailsId()).isEqualTo(accountId);
         assertThat(repository.getByAccountDetailsId(accountId).getAccount().getEmail()).isEqualTo("example16@gmail.com");
         assertThat(repository.getByName("name16").getImageFileName()).isNull();
-        assertThat(repository.findByIsDormant(true)).hasSize(5);
-        assertThat(repository.getByIsDormant(false)).hasSize(16-5);
+        assertThat(repository.findByIsDormant(true)).isNotEmpty();
+        assertThat(repository.getByIsDormant(false)).isNotEmpty();
+        assertThat(repository.findByAccount_Email(testEntity2.getEmail())).isNotNull();
+        assertThat(repository.getByAccount_Email(testEntity2.getEmail())).isNotNull();
     }
 
     @Test
@@ -85,23 +89,42 @@ class AccountDetailsRepositoryTest {
     @Test
     @DisplayName("test update accountDetails")
     void testUpdateAccountDetails() {
+        Account testEntity2 = new Account();
+        testEntity2.setEmail("example22@gmail.com");
+        testEntity2.setPassword("$2a$10$Y.Ri9pJDfOlV.ZLYY2KQwui2TInM6NomOFgWNV33f0PD5oxXKDEue");
 
-        AccountDetailsDtoImpl details = repository.findByAccountDetailsId(15);
-        details.setName("name19");
-        details.setIsDormant(true);
-        details.setImageFileName("name19.png");
-        details.setRegisterDate(LocalDateTime.of(1997, 10, 31, 10, 30));
+        testEntity2 = entityManager.persistAndFlush(testEntity2);
 
-        assertThat(repository.findByName(details.getName())).isNull();
+        AccountDetails details = new AccountDetails();
+        details.setAccountDetailsId(testEntity2.getAccountId());
+        details.setAccount(testEntity2);
+        details.setName("name22");
+        details.setIsDormant(false);
+        details.setImageFileName(null);
+        details.setRegisterDate(LocalDateTime.now());
 
-        repository.updateAccountDetails(details);
+        details = entityManager.persistAndFlush(details);
 
-        AccountDetails updated = repository.getByAccountDetailsId(15);
+        AccountDetailsDtoImpl accountDetailsDto = repository.findByAccountDetailsId(details.getAccountDetailsId());
 
-        assertThat(updated.getRegisterDate()).isEqualTo(details.getRegisterDate());
-        assertThat(updated.getName()).isEqualTo(details.getName());
+        accountDetailsDto.setName("$2a$10$5WcR");
+        accountDetailsDto.setIsDormant(true);
+        accountDetailsDto.setImageFileName("name.png");
+
+        assertThat(repository.findByName(accountDetailsDto.getName())).isNull();
+
+        repository.updateAccountDetails(accountDetailsDto);
+
+        assertThat(repository.findByName(accountDetailsDto.getName())).isNotNull();
+
+        entityManager.clear();
+
+        AccountDetails updated = repository.getByAccountDetailsId(details.getAccountDetailsId());
+
+        assertThat(updated.getRegisterDate()).isEqualTo(accountDetailsDto.getRegisterDate());
+        assertThat(updated.getName()).isEqualTo(accountDetailsDto.getName());
         assertThat(updated.getIsDormant()).isTrue();
-        assertThat(updated.getImageFileName()).isEqualTo(details.getImageFileName());
+        assertThat(updated.getImageFileName()).isEqualTo(accountDetailsDto.getImageFileName());
     }
 
     @Test

@@ -2,6 +2,7 @@ package com.example.minidoorayaccount.service;
 
 import com.example.minidoorayaccount.domain.TeamCodeDto;
 import com.example.minidoorayaccount.domain.TeamCodeDtoImpl;
+import com.example.minidoorayaccount.domain.TeamCodeUpdateReq;
 import com.example.minidoorayaccount.entity.TeamCode;
 import com.example.minidoorayaccount.exception.NotFoundTeamCodeException;
 import com.example.minidoorayaccount.repository.TeamCodeRepository;
@@ -44,14 +45,14 @@ public class DefaultTeamCodeService implements TeamCodeService{
 
     @Override
     @Transactional
-    public TeamCodeDtoImpl updateTeamCodeById(TeamCodeDtoImpl updateTeamCode) {
-        TeamCode teamCode = repository.findByTeamId(updateTeamCode.getTeamId());
+    public TeamCodeDtoImpl updateTeamCodeById(TeamCodeUpdateReq updateTeamCode) {
+        TeamCode teamCode = repository.findByTeamName(updateTeamCode.getBeforeTeamName());
 
         if (Objects.isNull(teamCode))
             throw new NotFoundTeamCodeException();
 
         TeamCodeDtoImpl updateDto = converterToDtoImpl(teamCode);
-        updateDto.setTeamName(updateTeamCode.getTeamName());
+        updateDto.setTeamName(updateTeamCode.getAfterTeamName());
 
         repository.updateTeamCode(updateDto);
 
@@ -60,9 +61,13 @@ public class DefaultTeamCodeService implements TeamCodeService{
 
     @Override
     @Transactional
-    public Integer deleteTeamCodeById(Integer deleteTeamId) {
-        repository.deleteTeamCode(deleteTeamId);
-        return deleteTeamId;
+    public void deleteTeamCodeById(String deleteTeamName) {
+        TeamCode deleteTeamCode = repository.findByTeamName(deleteTeamName);
+
+        if (Objects.isNull(deleteTeamCode))
+            throw new NotFoundTeamCodeException();
+
+        repository.deleteTeamCode(deleteTeamCode.getTeamId());
     }
 
 

@@ -18,8 +18,10 @@ public class Account {
     @Column(name = "account_id")
     private Integer accountId;
 
+    @Column(unique = true, nullable = false)
     private String email;
 
+    @Column(unique = true, nullable = false)
     private String password;
 
 }

@@ -2,6 +2,7 @@ package com.example.minidoorayaccount.service;
 
 import com.example.minidoorayaccount.domain.AccountDto;
 import com.example.minidoorayaccount.domain.AccountDtoImpl;
+import com.example.minidoorayaccount.domain.AccountUpdateReq;
 
 import java.util.List;
 
@@ -14,8 +15,8 @@ public interface AccountService {
 
     List<AccountDto> getAccounts();
 
-    AccountDtoImpl modifyAccount(AccountDtoImpl accountDto);
+    AccountDtoImpl modifyAccount(AccountUpdateReq accountDto);
 
-    Integer deleteAccount(Integer deleteId);
+    void deleteAccount(String deleteEmail);
 
 }

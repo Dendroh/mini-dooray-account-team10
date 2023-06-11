@@ -3,7 +3,7 @@ package com.example.minidoorayaccount.domain;
 import java.time.LocalDateTime;
 
 public interface AccountDetailsDto {
-    Integer getAccountId();
+    Integer getAccountDetailsId();
     String getName();
 
     String getImageFileName();
