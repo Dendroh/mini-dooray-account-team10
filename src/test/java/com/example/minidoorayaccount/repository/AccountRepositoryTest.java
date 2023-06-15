@@ -150,6 +150,8 @@ class AccountRepositoryTest {
 
         repository.deleteById(account1.getAccountId());
 
+        entityManager.clear();
+
         deleteAccount = repository.getByAccountId(account1.getAccountId());
         deletedBundle = bundleRepository.findByAccountDetails_AccountDetailsId(account1.getAccountId());
         deleteDetails = detailsRepository.getByAccountDetailsId(account1.getAccountId());
