@@ -89,31 +89,29 @@ public class DefaultAccountDetailsService implements AccountDetailsService {
         if (Objects.isNull(account))
             throw new NotFoundAccountException();
 
-        AccountDetailsDtoImpl accountDetailImpl = detailsRepository.findByAccountDetailsId(account.getAccountId());
+        AccountDetails accountDetail= detailsRepository.getByAccountDetailsId(account.getAccountId());
 
-        if (Objects.isNull(accountDetailImpl))
+        if (Objects.isNull(accountDetail))
             throw new NotFoundAccountDetailsException();
 
-        accountDetailImpl.setName(accountDetailsDto.getName());
-        accountDetailImpl.setIsDormant(accountDetailsDto.getIsDormant());
-        accountDetailImpl.setImageFileName(accountDetailsDto.getName() + ".png");
+        accountDetail.setName(accountDetailsDto.getName());
+        accountDetail.setIsDormant(accountDetailsDto.getIsDormant());
+        accountDetail.setImageFileName(accountDetailsDto.getName() + ".png");
 
-        detailsRepository.updateAccountDetails(accountDetailImpl);
 
-        return accountDetailImpl;
+        return converterToDtoImpl(accountDetail);
     }
 
 
     @Override
     @Transactional
     public void deleteAccountDetail(String deleteAccountEmail) {
-
-        Account account  = accountRepository.getByEmail(deleteAccountEmail);
+        Account account = accountRepository.getByEmail(deleteAccountEmail);
 
         if (Objects.isNull(account))
             throw new NotFoundAccountException();
 
-        detailsRepository.deleteAccountDetails(account.getAccountId());
+        detailsRepository.deleteById(account.getAccountId());
     }
 
 

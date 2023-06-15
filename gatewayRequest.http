@@ -44,21 +44,19 @@ Content-Type: application/json
 Host:localhost:8081
 
 {
-  "beforeEmail": "example99@gmail.com",
-  "afterEmail": "example1212@gmail.com",
+  "beforeEmail": "example1212@gmail.com",
+  "afterEmail": "example99@gmail.com",
   "password": "$2a$10$HXhQhbKjkcrVDTIEu5..vevGdlW5KBek7MhNlmY7ZugtTYzlezLEK"
 }
-
 ###
 
 # account api6. DELETE /accounts/{accountEmail}
 # : accountId로 단일 account 삭제
 DELETE /accounts/example1212@gmail.com
 Host:localhost:8081
-
-
-
 ###
+
+
 ### accountDetails API request
 
 # accountDetails api1. GET /accountDetails - test
@@ -96,8 +94,8 @@ Content-Type: application/json
 Host:localhost:8081
 
 {
-  "accountEmail": "1",
-  "name": "name104"
+  "accountEmail": "exam1@gmail.coom",
+  "name": "exam1"
 }
 
 ###
@@ -176,14 +174,14 @@ Host: localhost:8081
 
 # accountTeamCodeBundle api2. GET /accountTeams/name/{accountName}
 # : accountName으로 복수 teamCode 조회 (account가 속한 팀 조회)
-GET /accountTeams/name/name4
+GET /accountTeams/name/윤동현
 Host: localhost:8081
 
 ###
 
 # accountTeamCodeBundle api3. GET /accountTeams/email/{accountEmail}
 # : accountEmail로 복수 teamCode 조회 (account가 속한 팀 조회)
-GET /accountTeams/email/example8@gmail.com
+GET /accountTeams/email/eatpaper1429@gmail.com
 Host: localhost:8081
 
 ###
@@ -196,7 +194,7 @@ Content-Type: application/json
 Host:localhost:8081
 
 {
-  "email": "example8@gmail.com",
+  "email": "exam1@gmail.coom",
   "teamName": "Team3"
 }
 
@@ -208,10 +206,16 @@ PUT /accountTeams/
 Content-Type: application/json
 Host:localhost:8081
 
+//{
+//  "teamName": "Team3",
+//  "email": "exam1@gmail.coom",
+//  "newEmail": "exam2@gmail.com"
+//}
+
 {
   "teamName": "Team3",
-  "email": "example8@gmail.com",
-  "newEmail": "example7@gmail.com"
+  "email": "exam2@gmail.com",
+  "newTeamName": "Team6"
 }
 
 ###

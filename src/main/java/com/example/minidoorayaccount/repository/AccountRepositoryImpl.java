@@ -4,6 +4,7 @@ import com.example.minidoorayaccount.domain.AccountDtoImpl;
 import com.example.minidoorayaccount.entity.Account;
 import com.example.minidoorayaccount.entity.QAccount;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
+import org.springframework.transaction.annotation.Transactional;
 
 public class AccountRepositoryImpl extends QuerydslRepositorySupport implements AccountRepositoryCustom {
     public AccountRepositoryImpl() {
@@ -11,24 +12,18 @@ public class AccountRepositoryImpl extends QuerydslRepositorySupport implements 
     }
 
     @Override
-    public void updateAccount(AccountDtoImpl accountDto) {
-
+    @Transactional
+    public Account updateAccount(AccountDtoImpl accountDto) {
         QAccount account = QAccount.account;
 
-        update(account)
-                .set(account.email, accountDto.getEmail())
-                .set(account.password, accountDto.getPassword())
+        Account updatedAccount = from(account)
                 .where(account.accountId.eq(accountDto.getAccountId()))
-                .execute();
+                        .fetchFirst();
+
+        updatedAccount.setEmail(accountDto.getEmail());
+        updatedAccount.setPassword(accountDto.getPassword());
+
+        return updatedAccount;
     }
 
-    @Override
-    public void deleteAccountById(Integer accountId) {
-
-        QAccount account = QAccount.account;
-
-        delete(account)
-                .where(account.accountId.eq(accountId))
-                .execute();
-    }
 }

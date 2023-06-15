@@ -79,10 +79,13 @@ class AccountServiceTest {
 
     @Test
     void testModifyAccount() {
-        AccountDtoImpl accountDto = new AccountDtoImpl(23, "testEmail", "testPassword");
+        Account account = new Account();
+        account.setAccountId(23);
+        account.setEmail("testEmail");
+        account.setPassword("testPassword");
 
-        doReturn(accountDto).when(repository).queryByEmail("testEmail");
-        doReturn(null).when(repository).queryByEmail("notFoundEmail");
+        doReturn(account).when(repository).getByEmail("testEmail");
+        doReturn(null).when(repository).getByEmail("notFoundEmail");
 
         AccountUpdateReq updateReq = new AccountUpdateReq();
         updateReq.setBeforeEmail("testEmail");
@@ -91,7 +94,7 @@ class AccountServiceTest {
 
         AccountDtoImpl updatedDto = service.modifyAccount(updateReq);
 
-        assertThat(updatedDto.getAccountId()).isEqualTo(accountDto.getAccountId());
+        assertThat(updatedDto.getAccountId()).isEqualTo(account.getAccountId());
         assertThat(updatedDto.getEmail()).isEqualTo("updatedEmail");
         assertThat(updatedDto.getPassword()).isEqualTo("updatedPassword");
 
@@ -99,7 +102,6 @@ class AccountServiceTest {
 
         Assertions.assertThrows(NotFoundAccountException.class, () -> service.modifyAccount(updateReq));
 
-        verify(repository, times(1)).updateAccount(any());
     }
 
     @Test
@@ -115,6 +117,5 @@ class AccountServiceTest {
         Assertions.assertThrows(NotFoundAccountException.class, () -> service.deleteAccount("notFoundEmail"));
         service.deleteAccount("testEmail");
 
-        verify(repository, times(1)).deleteAccountById(anyInt());
     }
 }

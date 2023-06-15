@@ -58,11 +58,11 @@ public class DefaultAccountTeamBundleService implements AccountTeamBundleService
 
     @Override
     public List<TeamCodeDtoImpl> getTeamNamesByAccountEmail(String accountEmail) {
-
         AccountDetailsDtoImpl accountByEmail = accountDetailsRepository.findByAccount_Email(accountEmail);
 
         if (Objects.isNull(accountByEmail))
             throw new NotFoundAccountException();
+
 
         return bundleRepository.findByAccountDetails_AccountDetailsId(accountByEmail.getAccountDetailsId()).stream()
                 .map(AccountTeamBundle::getTeamCode)
@@ -91,56 +91,54 @@ public class DefaultAccountTeamBundleService implements AccountTeamBundleService
     }
 
     @Override
-    @Transactional
     public AccountTeamBundleRespDto updateAccountTeamBundle(AccountTeamBundleUpdateReq accountTeamBundleDto) {
 
         AccountDetails accountDetails = checkNullAndGetAccountDetailsByEmail(accountTeamBundleDto.getEmail());
         TeamCode teamCode = checkNullAndGetTeamCodeByTeamName(accountTeamBundleDto.getTeamName());
-
-        AccountTeamBundleDtoImpl dto = new AccountTeamBundleDtoImpl(new AccountTeamBundle.Pk(),
-                null, null, LocalDateTime.now().plusHours(9));
+        AccountTeamBundle deleteBundle = bundleRepository.findByAccountDetails_NameAndTeamCode_TeamName(accountDetails.getName(), teamCode.getTeamName());
 
         if (Objects.isNull(bundleRepository.queryByTeamCode_TeamIdAndAccountDetails_AccountDetailsId(teamCode.getTeamId(), accountDetails.getAccountDetailsId())))
             throw new NotFoundAccountTeamBundleException();
 
         if (Objects.isNull(accountTeamBundleDto.getNewTeamName())) {
-
             AccountDetails accountDetailsByNewEmail = checkNullAndGetAccountDetailsByEmail(accountTeamBundleDto.getNewEmail());
 
-            dto.getPk().setTeamId(teamCode.getTeamId());
-            dto.getPk().setAccountDetailsId(accountDetailsByNewEmail.getAccountDetailsId());
-            dto.setAccountDetails(accountDetailsByNewEmail);
-            dto.setTeamCode(teamCode);
-            dto.setRegisterDate(LocalDateTime.now().plusHours(9));
+            bundleRepository.deleteById(deleteBundle.getPk());
 
-            bundleRepository.updateAccountTeamBundleByTeamId(dto, accountDetails.getAccountDetailsId());
+            AccountTeamBundle newBundle = new AccountTeamBundle();
+            newBundle.setPk(new AccountTeamBundle.Pk());
+            newBundle.setTeamCode(teamCode);
+            newBundle.setAccountDetails(accountDetailsByNewEmail);
+            newBundle.getPk().setTeamId(teamCode.getTeamId());
+            newBundle.getPk().setAccountDetailsId(accountDetails.getAccountDetailsId());
+            newBundle.setRegisterDate(LocalDateTime.now().plusHours(9));
+
+            return convertToResp(bundleRepository.saveAndFlush(newBundle));
         }
 
-        if (Objects.isNull(accountTeamBundleDto.getNewEmail())) {
-
+        else {
             TeamCode teamCodeByNewTeamName = checkNullAndGetTeamCodeByTeamName(accountTeamBundleDto.getNewTeamName());
 
-            dto.getPk().setAccountDetailsId(accountDetails.getAccountDetailsId());
-            dto.getPk().setTeamId(teamCodeByNewTeamName.getTeamId());
-            dto.setAccountDetails(accountDetails);
-            dto.setTeamCode(teamCodeByNewTeamName);
-            dto.setRegisterDate(LocalDateTime.now().plusHours(9));
+            bundleRepository.deleteById(deleteBundle.getPk());
 
-            bundleRepository.updateAccountTeamBundleByAccountId(dto, teamCode.getTeamId());
+            AccountTeamBundle newBundle = new AccountTeamBundle();
+            newBundle.setPk(new AccountTeamBundle.Pk());
+            newBundle.setTeamCode(teamCodeByNewTeamName);
+            newBundle.setAccountDetails(accountDetails);
+            newBundle.getPk().setTeamId(teamCodeByNewTeamName.getTeamId());
+            newBundle.getPk().setAccountDetailsId(accountDetails.getAccountDetailsId());
+            newBundle.setRegisterDate(LocalDateTime.now().plusHours(9));
+
+            return convertToResp(bundleRepository.saveAndFlush(newBundle));
         }
-
-        return new AccountTeamBundleRespDto(null,
-                null, dto.getRegisterDate(), dto.getTeamCode().getTeamName(), dto.getAccountDetails().getAccount().getEmail());
     }
 
     @Override
-    @Transactional
     public void deleteAccountTeamBundle(String deleteTeamName, String deleteAccountEmail) {
-
         TeamCode teamCode = checkNullAndGetTeamCodeByTeamName(deleteTeamName);
         AccountDetails accountDetails = checkNullAndGetAccountDetailsByEmail(deleteAccountEmail);
 
-        bundleRepository.deleteBundle(teamCode.getTeamId(), accountDetails.getAccountDetailsId());
+        bundleRepository.deleteByPk_TeamIdAndPk_AccountDetailsId(teamCode.getTeamId(), accountDetails.getAccountDetailsId());
     }
 
 
@@ -180,6 +178,11 @@ public class DefaultAccountTeamBundleService implements AccountTeamBundleService
             throw new NotFoundTeamCodeException();
 
         return teamCode;
+    }
+
+    public static AccountTeamBundleRespDto convertToResp(AccountTeamBundle bundle) {
+        return new AccountTeamBundleRespDto(bundle.getPk().getTeamId(), bundle.getPk().getAccountDetailsId(),
+                bundle.getRegisterDate(), bundle.getTeamCode().getTeamName(), bundle.getAccountDetails().getAccount().getEmail());
     }
 
 }

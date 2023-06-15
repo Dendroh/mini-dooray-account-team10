@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface AccountDetailsRepository extends JpaRepository<AccountDetails, Integer>, AccountDetailsRepositoryCustom {
+public interface AccountDetailsRepository extends JpaRepository<AccountDetails, Integer> {
 
     AccountDetailsDtoImpl findByAccountDetailsId(Integer accountDetailsId);
 

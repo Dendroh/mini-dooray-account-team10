@@ -50,20 +50,16 @@ public class DefaultAccountService implements AccountService {
     }
 
     @Override
-    @Transactional
     public AccountDtoImpl modifyAccount(AccountUpdateReq accountDto) {
+        AccountDtoImpl accountDtoById = repository.queryByEmail(accountDto.getBeforeEmail());
 
-        AccountDtoImpl updateDto = repository.queryByEmail(accountDto.getBeforeEmail());
-
-        if (Objects.isNull(updateDto))
+        if (Objects.isNull(accountDtoById))
             throw new NotFoundAccountException();
 
-        updateDto.setEmail(accountDto.getAfterEmail());
-        updateDto.setPassword(accountDto.getPassword());
+        accountDtoById.setEmail(accountDto.getAfterEmail());
+        accountDtoById.setPassword(accountDto.getPassword());
 
-        repository.updateAccount(updateDto);
-
-        return updateDto;
+        return converterToDtoImpl(repository.updateAccount(accountDtoById));
     }
 
     @Override
@@ -74,7 +70,7 @@ public class DefaultAccountService implements AccountService {
         if (Objects.isNull(deleteAccount))
             throw new NotFoundAccountException();
 
-        repository.deleteAccountById(deleteAccount.getAccountId());
+        repository.deleteById(deleteAccount.getAccountId());
     }
 
     public static Account converterToEntity(AccountDtoImpl accountDto) {

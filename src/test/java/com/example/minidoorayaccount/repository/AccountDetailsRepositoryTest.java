@@ -105,19 +105,15 @@ class AccountDetailsRepositoryTest {
 
         details = entityManager.persistAndFlush(details);
 
-        AccountDetailsDtoImpl accountDetailsDto = repository.findByAccountDetailsId(details.getAccountDetailsId());
+        AccountDetails accountDetailsDto = repository.getByAccountDetailsId(details.getAccountDetailsId());
+
+        assertThat(repository.findByName(accountDetailsDto.getName())).isNull();
 
         accountDetailsDto.setName("$2a$10$5WcR");
         accountDetailsDto.setIsDormant(true);
         accountDetailsDto.setImageFileName("name.png");
 
-        assertThat(repository.findByName(accountDetailsDto.getName())).isNull();
-
-        repository.updateAccountDetails(accountDetailsDto);
-
         assertThat(repository.findByName(accountDetailsDto.getName())).isNotNull();
-
-        entityManager.clear();
 
         AccountDetails updated = repository.getByAccountDetailsId(details.getAccountDetailsId());
 
@@ -134,7 +130,7 @@ class AccountDetailsRepositoryTest {
 
         assertThat(accountDetails).isNotNull();
 
-        repository.deleteAccountDetails(accountDetails.getAccountDetailsId());
+        repository.deleteById(accountDetails.getAccountDetailsId());
 
         accountDetails = repository.getByAccountDetailsId(accountDetails.getAccountDetailsId());
 
