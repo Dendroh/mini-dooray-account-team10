@@ -10,18 +10,20 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface AccountTeamCodeBundleRepository extends JpaRepository<AccountTeamBundle, AccountTeamBundle.Pk>, AccountTeamCodeBundleRepositoryCustom {
+public interface AccountTeamCodeBundleRepository extends JpaRepository<AccountTeamBundle, AccountTeamBundle.Pk> {
 
     List<AccountTeamBundleDto> findAllBy();
 
     List<AccountTeamBundle> findByAccountDetails_AccountDetailsId(Integer accountId);
-
-    List<AccountTeamBundleDto> getByAccountDetails_Name(String accountName);
 
     AccountTeamBundleDtoImpl queryByTeamCode_TeamIdAndAccountDetails_AccountDetailsId(Integer teamId, Integer accountId);
 
     AccountTeamBundleDtoImpl queryByTeamCode_TeamNameAndAccountDetails_Name(String teamName, String accountName);
 
     AccountTeamBundle findByAccountDetails_NameAndTeamCode_TeamName(String accountName, String teamName);
+
+    List<AccountTeamBundle> findByAccountDetails_Name(String accountName);
+
+    void deleteByPk_TeamIdAndPk_AccountDetailsId(Integer teamId, Integer detailsId);
 
 }

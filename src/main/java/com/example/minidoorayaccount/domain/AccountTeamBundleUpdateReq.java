@@ -1,23 +1,20 @@
 package com.example.minidoorayaccount.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
+import lombok.Data;
 
-import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 
 @Data
-@AllArgsConstructor
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class AccountDtoImpl implements AccountDto {
-    private Integer accountId;
-
+public class AccountTeamBundleUpdateReq {
     @NotBlank
-    private String email;
-
+    String email;
     @NotBlank
-    private String password;
+    String teamName;
 
+    String newEmail;
+
+    String newTeamName;
 }

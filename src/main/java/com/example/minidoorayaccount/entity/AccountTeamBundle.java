@@ -11,10 +11,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@NamedEntityGraph(name = "bundlesWithAccountAndTeamCode", attributeNodes = {
-        @NamedAttributeNode(value = "accountDetails"),
-        @NamedAttributeNode(value = "teamCode")
-})
 @Entity
 @Table(name = "account_team_bundle")
 @Setter

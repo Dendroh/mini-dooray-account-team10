@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface AccountDetailsRepository extends JpaRepository<AccountDetails, Integer>, AccountDetailsRepositoryCustom {
+public interface AccountDetailsRepository extends JpaRepository<AccountDetails, Integer> {
 
     AccountDetailsDtoImpl findByAccountDetailsId(Integer accountDetailsId);
 
@@ -16,7 +16,13 @@ public interface AccountDetailsRepository extends JpaRepository<AccountDetails, 
 
     AccountDetails getByName(String name);
 
+    AccountDetailsDtoImpl findByAccount_Email(String accountEmail);
+
+    AccountDetails getByAccount_Email(String accountEmail);
+
     List<AccountDetailsDtoImpl> findByIsDormant(Boolean isDormant);
+
+    List<AccountDetailsDtoImpl> findBy();
 
     List<AccountDetails> getByIsDormant(Boolean isDormant);
 
