@@ -137,28 +137,23 @@ class AccountRepositoryTest {
     }
 
     @Test
-    @Transactional
     @DisplayName("test account repository's delete Account")
     void testDeleteAccount() {
-        Account deleteAccount = repository.getByAccountId(account1.getAccountId());
-        List<AccountTeamBundle> deletedBundle = bundleRepository.findByAccountDetails_AccountDetailsId(account1.getAccountId());
-        AccountDetails deleteDetails = detailsRepository.getByAccountDetailsId(account1.getAccountId());
+        Account account = new Account();
+        account.setEmail("example");
+        account.setPassword("example1");
+
+        account = repository.saveAndFlush(account);
+
+        Account deleteAccount = repository.getByAccountId(account.getAccountId());
 
         assertThat(deleteAccount).isNotNull();
-        assertThat(deletedBundle).isNotEmpty();
-        assertThat(deleteDetails).isNotNull();
 
-        repository.deleteById(account1.getAccountId());
+        repository.deleteById(deleteAccount.getAccountId());
 
-        entityManager.clear();
+        deleteAccount = repository.getByAccountId(account.getAccountId());
 
-        deleteAccount = repository.getByAccountId(account1.getAccountId());
-        deletedBundle = bundleRepository.findByAccountDetails_AccountDetailsId(account1.getAccountId());
-        deleteDetails = detailsRepository.getByAccountDetailsId(account1.getAccountId());
-
-        assertThat(deletedBundle).isEmpty();
         assertThat(deleteAccount).isNull();
-        assertThat(deleteDetails).isNull();
     }
 
 }

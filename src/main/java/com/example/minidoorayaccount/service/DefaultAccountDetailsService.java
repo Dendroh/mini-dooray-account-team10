@@ -96,8 +96,6 @@ public class DefaultAccountDetailsService implements AccountDetailsService {
 
         accountDetail.setName(accountDetailsDto.getName());
         accountDetail.setIsDormant(accountDetailsDto.getIsDormant());
-        accountDetail.setImageFileName(accountDetailsDto.getName() + ".png");
-
 
         return converterToDtoImpl(accountDetail);
     }

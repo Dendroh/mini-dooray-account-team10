@@ -59,7 +59,12 @@ class TeamCodeRepositoryTest {
     @Test
     @DisplayName("test teamCode repository's update teamCode")
     void testUpdateTeamCode() {
-        TeamCodeDtoImpl updateTeamCode = repository.queryByTeamId(4);
+        TeamCode teamCode = new TeamCode();
+        teamCode.setTeamName("NHN-test");
+
+        TeamCode beforeTeamCode = entityManager.persistAndFlush(teamCode);
+
+        TeamCodeDtoImpl updateTeamCode = repository.queryByTeamId(beforeTeamCode.getTeamId());
 
         assertThat(updateTeamCode).isNotNull();
         assertThat(updateTeamCode.getTeamName()).isEqualTo("Team4");

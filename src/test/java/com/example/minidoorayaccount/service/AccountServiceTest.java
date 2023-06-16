@@ -79,13 +79,17 @@ class AccountServiceTest {
 
     @Test
     void testModifyAccount() {
-        Account account = new Account();
-        account.setAccountId(23);
-        account.setEmail("testEmail");
-        account.setPassword("testPassword");
+        AccountDtoImpl account = new AccountDtoImpl(23, "testEmail", "testPassword");
 
-        doReturn(account).when(repository).getByEmail("testEmail");
-        doReturn(null).when(repository).getByEmail("notFoundEmail");
+        Account updateAccount = new Account();
+        updateAccount.setAccountId(23);
+        updateAccount.setEmail("updatedEmail");
+        updateAccount.setPassword("updatedPassword");
+
+        doReturn(account).when(repository).queryByEmail("testEmail");
+        doReturn(null).when(repository).queryByEmail("notFoundEmail");
+        doReturn(updateAccount).when(repository).updateAccount(account);
+
 
         AccountUpdateReq updateReq = new AccountUpdateReq();
         updateReq.setBeforeEmail("testEmail");
@@ -101,7 +105,6 @@ class AccountServiceTest {
         updateReq.setBeforeEmail("notFoundEmail");
 
         Assertions.assertThrows(NotFoundAccountException.class, () -> service.modifyAccount(updateReq));
-
     }
 
     @Test

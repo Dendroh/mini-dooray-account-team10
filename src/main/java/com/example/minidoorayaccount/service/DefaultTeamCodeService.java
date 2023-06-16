@@ -44,7 +44,6 @@ public class DefaultTeamCodeService implements TeamCodeService{
     }
 
     @Override
-    @Transactional
     public TeamCodeDtoImpl updateTeamCodeById(TeamCodeUpdateReq updateTeamCode) {
         TeamCode teamCode = repository.findByTeamName(updateTeamCode.getBeforeTeamName());
 

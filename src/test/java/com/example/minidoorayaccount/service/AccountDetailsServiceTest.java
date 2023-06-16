@@ -150,23 +150,25 @@ class AccountDetailsServiceTest {
         account.setAccountId(1);
         account.setPassword("testPassword");
 
-        AccountDetailsDtoImpl accountDetailsDto = new AccountDetailsDtoImpl(1, null,
-                null, null, LocalDateTime.now().plusHours(9));
+        AccountDetails accountDetailsByDto = new AccountDetails();
+
+        accountDetailsByDto.setAccountDetailsId(1);
+        accountDetailsByDto.setRegisterDate(LocalDateTime.now().plusHours(9));
 
         doReturn(account).when(accountRepository).getByEmail(account.getEmail());
         doReturn(null).when(accountRepository).getByEmail("notFoundEmail");
         doReturn(account).when(accountRepository).getByEmail("notFoundDetails");
 
-        doReturn(accountDetailsDto).when(detailsRepository).findByAccountDetailsId(account.getAccountId());
-        doReturn(null).when(detailsRepository).findByAccountDetailsId(1000);
+        doReturn(accountDetailsByDto).when(detailsRepository).getByAccountDetailsId(account.getAccountId());
+        doReturn(null).when(detailsRepository).getByAccountDetailsId(1000);
 
         AccountDetailsDtoImpl updatedDto = service.modifyAccountDetail(updateReq);
 
         assertThat(updatedDto.getName()).isEqualTo(updateReq.getName());
         assertThat(updatedDto.getAccountDetailsId()).isEqualTo(account.getAccountId());
-        assertThat(updatedDto.getImageFileName()).isEqualTo(updatedDto.getName() + ".png");
+        assertThat(updatedDto.getImageFileName()).isNull();
         assertThat(updatedDto.getIsDormant()).isEqualTo(updatedDto.getIsDormant());
-        assertThat(updatedDto.getRegisterDate().toLocalDate()).isEqualTo(accountDetailsDto.getRegisterDate().toLocalDate());
+        assertThat(updatedDto.getRegisterDate().toLocalDate()).isEqualTo(accountDetailsByDto.getRegisterDate().toLocalDate());
 
         updateReq.setAccountEmail("notFoundEmail");
 
