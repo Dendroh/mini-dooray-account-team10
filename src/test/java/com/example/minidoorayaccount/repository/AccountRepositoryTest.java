@@ -120,20 +120,22 @@ class AccountRepositoryTest {
     @Test
     @DisplayName("test account repository's update Account")
     void testUpdateAccount() {
-        AccountDto updateAccountDto = repository.findByEmail(account1.getEmail());
-        Account updateAccount = repository.getByAccountId(updateAccountDto.getAccountId());
-        assertThat(updateAccount.getAccountId()).isEqualTo(account1.getAccountId());
+        AccountDtoImpl updateAccountDto = repository.queryByEmail(account1.getEmail());
 
-        updateAccount.setEmail("example100@gmail.com");
-        updateAccount.setPassword("$2a$10$ritwSwzIdrelD2V4vpgTpOMCAPMV3IYOeKycHaoLcWdUYIqvJQ1HW");
+        assertThat(updateAccountDto.getAccountId()).isEqualTo(account1.getAccountId());
+
+        updateAccountDto.setEmail("example100@gmail.com");
+        updateAccountDto.setPassword("$2a$10$ritwSwzIdrelD2V4vpgTpOMCAPMV3IYOeKycHaoLcWdUYIqvJQ1HW");
+
+        repository.updateAccount(updateAccountDto);
 
         assertThat(repository.queryByEmail("example100@gmail.com")).isNotNull();
 
         Account result = repository.getByEmail("example100@gmail.com");
 
         assertThat(result.getAccountId()).isEqualTo(account1.getAccountId());
-        assertThat(result.getEmail()).isEqualTo(updateAccount.getEmail());
-        assertThat(result.getPassword()).isEqualTo(updateAccount.getPassword());
+        assertThat(result.getEmail()).isEqualTo(updateAccountDto.getEmail());
+        assertThat(result.getPassword()).isEqualTo(updateAccountDto.getPassword());
     }
 
     @Test

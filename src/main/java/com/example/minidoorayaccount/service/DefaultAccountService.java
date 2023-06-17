@@ -50,6 +50,7 @@ public class DefaultAccountService implements AccountService {
     }
 
     @Override
+    @Transactional
     public AccountDtoImpl modifyAccount(AccountUpdateReq accountDto) {
         AccountDtoImpl accountDtoById = repository.queryByEmail(accountDto.getBeforeEmail());
 
@@ -59,7 +60,7 @@ public class DefaultAccountService implements AccountService {
         accountDtoById.setEmail(accountDto.getAfterEmail());
         accountDtoById.setPassword(accountDto.getPassword());
 
-        return converterToDtoImpl(repository.updateAccount(accountDtoById));
+        return accountDtoById;
     }
 
     @Override

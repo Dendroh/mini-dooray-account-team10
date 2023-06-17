@@ -1,6 +1,5 @@
 package com.example.minidoorayaccount.service;
 
-import com.example.minidoorayaccount.domain.AccountDetailsDtoImpl;
 import com.example.minidoorayaccount.domain.AccountDtoImpl;
 import com.example.minidoorayaccount.domain.AccountUpdateReq;
 import com.example.minidoorayaccount.entity.Account;
@@ -8,7 +7,6 @@ import com.example.minidoorayaccount.exception.NotFoundAccountException;
 import com.example.minidoorayaccount.repository.AccountRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -17,10 +15,7 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
-import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @SpringBootTest
 class AccountServiceTest {

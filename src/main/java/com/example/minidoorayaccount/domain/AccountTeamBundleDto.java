@@ -1,6 +1,5 @@
 package com.example.minidoorayaccount.domain;
 
-import com.example.minidoorayaccount.entity.Account;
 import com.example.minidoorayaccount.entity.AccountDetails;
 import com.example.minidoorayaccount.entity.AccountTeamBundle;
 import com.example.minidoorayaccount.entity.TeamCode;

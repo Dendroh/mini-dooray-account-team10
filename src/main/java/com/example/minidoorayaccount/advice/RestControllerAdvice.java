@@ -18,7 +18,7 @@ public class RestControllerAdvice {
     @ResponseBody
     public ExceptionRequest validationFailed(Exception ig, HttpServletRequest req) {
         ExceptionRequest eventErrorRequest = new ExceptionRequest();
-        eventErrorRequest.setStatusCode(405);
+        eventErrorRequest.setStatusCode(400);
         eventErrorRequest.setError(ig.getMessage());
         eventErrorRequest.setPath(req.getServletPath());
 

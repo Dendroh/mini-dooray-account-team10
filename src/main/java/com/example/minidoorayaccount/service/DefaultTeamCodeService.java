@@ -66,7 +66,7 @@ public class DefaultTeamCodeService implements TeamCodeService{
         if (Objects.isNull(deleteTeamCode))
             throw new NotFoundTeamCodeException();
 
-        repository.deleteTeamCode(deleteTeamCode.getTeamId());
+        repository.deleteById(deleteTeamCode.getTeamId());
     }
 
 

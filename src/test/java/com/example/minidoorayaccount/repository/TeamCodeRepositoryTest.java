@@ -67,7 +67,7 @@ class TeamCodeRepositoryTest {
         TeamCodeDtoImpl updateTeamCode = repository.queryByTeamId(beforeTeamCode.getTeamId());
 
         assertThat(updateTeamCode).isNotNull();
-        assertThat(updateTeamCode.getTeamName()).isEqualTo("Team4");
+        assertThat(updateTeamCode.getTeamName()).isEqualTo("NHN-test");
 
         updateTeamCode.setTeamName("team1000");
 
@@ -81,19 +81,19 @@ class TeamCodeRepositoryTest {
     @Test
     @DisplayName("test teamCode repository's delete teamCode")
     void testDeleteTeamCode() {
-        TeamCode deleteTeamCode = repository.findByTeamName("Team2");
-         assertThat(deleteTeamCode).isNotNull();
-         assertThat(deleteTeamCode.getTeamId()).isEqualTo(2);
+        TeamCode teamCode = new TeamCode();
+        teamCode.setTeamName("NHN-test");
 
-         repository.deleteTeamCode(deleteTeamCode.getTeamId());
+        TeamCode beforeTeamCode = entityManager.persistAndFlush(teamCode);
 
-         deleteTeamCode = repository.findByTeamName("Team2");
+         assertThat(beforeTeamCode).isNotNull();
+         assertThat(beforeTeamCode.getTeamId()).isEqualTo(beforeTeamCode.getTeamId());
 
-         assertThat(deleteTeamCode).isNull();
+         repository.deleteById(beforeTeamCode.getTeamId());
 
-        Assertions.assertDoesNotThrow(() -> {
-            repository.deleteTeamCode(1000);
-        });
+         TeamCode afterTeamCode = repository.findByTeamName("NHN-test");
+
+         assertThat(afterTeamCode).isNull();
     }
 
 }

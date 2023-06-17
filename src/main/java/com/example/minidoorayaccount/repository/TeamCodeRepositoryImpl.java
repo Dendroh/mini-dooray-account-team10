@@ -23,13 +23,4 @@ public class TeamCodeRepositoryImpl extends QuerydslRepositorySupport implements
 
         updateTeamCode.setTeamName(teamCodeDto.getTeamName());
     }
-
-    @Override
-    public void deleteTeamCode(Integer deleteTeamCodeId) {
-        QTeamCode teamCode = QTeamCode.teamCode;
-
-        delete(teamCode)
-                .where(teamCode.teamId.eq(deleteTeamCodeId))
-                .execute();
-    }
 }
