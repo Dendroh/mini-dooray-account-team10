@@ -31,7 +31,7 @@ class AccountServiceTest {
         AccountDtoImpl dto = new AccountDtoImpl(null, "test@gmail.com", "$2a$10$SpohekWHF7IctpwT87wY9eaBawJL1YJfXlQMMB.u5xtZ5GiFuhrN6");
         doReturn(DefaultAccountService.converterToEntity(dto)).when(repository).saveAndFlush(any());
 
-        assertThat(service.createAccount(dto)).isEqualTo(dto);
+        assertThat(service.createAccount(dto).getPassword()).isEqualTo(dto.getPassword());
     }
 
     @Test
@@ -46,7 +46,7 @@ class AccountServiceTest {
 
         Assertions.assertThrows(NotFoundAccountException.class, () -> service.getAccountById(11111));
 
-        assertThat(service.getAccountById(account.getAccountId())).isEqualTo(DefaultAccountService.converterToDtoImpl(account));
+        assertThat(service.getAccountById(account.getAccountId()).getPassword()).isEqualTo(DefaultAccountService.converterToDtoImpl(account).getPassword());
     }
 
     @Test

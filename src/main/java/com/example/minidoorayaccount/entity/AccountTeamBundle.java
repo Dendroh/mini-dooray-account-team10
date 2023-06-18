@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @Table(name = "account_team_bundle")
 @Setter
 @Getter
-@EqualsAndHashCode
 public class AccountTeamBundle {
     @EmbeddedId
     private Pk pk;

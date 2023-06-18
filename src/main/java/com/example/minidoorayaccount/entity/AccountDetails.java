@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @Table(name = "account_details")
 @Getter
 @Setter
-@EqualsAndHashCode
 public class AccountDetails implements Serializable {
     @Id
     @Column(name = "account_details_id")

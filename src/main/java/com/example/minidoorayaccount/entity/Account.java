@@ -10,7 +10,6 @@ import javax.persistence.*;
 @Table(name = "account")
 @Getter
 @Setter
-@EqualsAndHashCode
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
