@@ -11,7 +11,6 @@ import java.io.Serializable;
 @Table(name = "team_code")
 @Getter
 @Setter
-@EqualsAndHashCode
 public class TeamCode implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

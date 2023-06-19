@@ -5,13 +5,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "account")
 @Getter
 @Setter
-@EqualsAndHashCode
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

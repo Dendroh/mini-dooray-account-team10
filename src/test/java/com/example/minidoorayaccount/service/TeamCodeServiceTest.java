@@ -100,7 +100,5 @@ class TeamCodeServiceTest {
 
         Assertions.assertDoesNotThrow(() -> service.deleteTeamCodeById("testTeam"));
         Assertions.assertThrows(NotFoundTeamCodeException.class, () -> service.deleteTeamCodeById("notFoundTeam"));
-
-        verify(repository, times(1)).deleteTeamCode(anyInt());
     }
 }

@@ -1,47 +1,43 @@
 package com.example.minidoorayaccount.service;
 
-import com.example.minidoorayaccount.domain.AccountDetailsDtoImpl;
-import com.example.minidoorayaccount.domain.AccountTeamBundleRespDto;
-import com.example.minidoorayaccount.domain.AccountTeamCodeBundlePostReq;
-import com.example.minidoorayaccount.domain.TeamCodeDtoImpl;
+import com.example.minidoorayaccount.domain.*;
 import com.example.minidoorayaccount.entity.Account;
 import com.example.minidoorayaccount.entity.AccountDetails;
 import com.example.minidoorayaccount.entity.AccountTeamBundle;
 import com.example.minidoorayaccount.entity.TeamCode;
+import com.example.minidoorayaccount.exception.NotFoundAccountException;
 import com.example.minidoorayaccount.exception.NotFoundAccountTeamBundleException;
 import com.example.minidoorayaccount.repository.AccountDetailsRepository;
-import com.example.minidoorayaccount.repository.AccountRepository;
 import com.example.minidoorayaccount.repository.AccountTeamCodeBundleRepository;
 import com.example.minidoorayaccount.repository.TeamCodeRepository;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class AccountTeamBundleServiceTest {
-    @MockBean
+    @Mock
     private AccountDetailsRepository detailsRepository;
 
-    @MockBean
+    @Mock
     private TeamCodeRepository teamCodeRepository;
 
-    @MockBean
+    @Mock
     private AccountTeamCodeBundleRepository bundleRepository;
 
-    @Autowired
-    private AccountTeamBundleService service;
+    @InjectMocks
+    private DefaultAccountTeamBundleService service;
 
     private ArrayList<AccountTeamBundle> bundleArrayList;
 
@@ -117,6 +113,7 @@ class AccountTeamBundleServiceTest {
         doReturn(dto).when(detailsRepository).findByAccount_Email("testEmail");
         doReturn(null).when(detailsRepository).findByAccount_Email("notFoundEmail");
 
+
         doReturn(bundleArrayList).when(bundleRepository).findByAccountDetails_AccountDetailsId(1);
 
         List<TeamCodeDtoImpl> dtoList = service.getTeamNamesByAccountEmail("testEmail");
@@ -125,7 +122,7 @@ class AccountTeamBundleServiceTest {
         assertThat(dtoList.get(0).getTeamName()).isEqualTo("testTeam2");
 
 
-        Assertions.assertThrows(NotFoundAccountTeamBundleException.class, () -> service.getTeamNamesByAccountName("notFoundEmail"));
+        Assertions.assertThrows(NotFoundAccountException.class, () -> service.getTeamNamesByAccountEmail("notFoundEmail"));
     }
 
     @Test
@@ -135,10 +132,8 @@ class AccountTeamBundleServiceTest {
         postReq.setTeamName("testTeam");
 
         doReturn(bundle1.getAccountDetails()).when(detailsRepository).getByAccount_Email("testEmail");
-        doReturn(null).when(detailsRepository).getByAccount_Email("notFoundEmail");
 
         doReturn(bundle1.getTeamCode()).when(teamCodeRepository).findByTeamName("testTeam");
-        doReturn(null).when(teamCodeRepository).findByTeamName("notFoundTeam");
 
 
         doReturn(bundle1.getAccountDetails()).when(detailsRepository).getByAccountDetailsId(1);
@@ -150,17 +145,63 @@ class AccountTeamBundleServiceTest {
         assertThat(respDto.getTeamName()).isEqualTo("testTeam2");
 
 
-
         verify(bundleRepository, times(1)).saveAndFlush(any(AccountTeamBundle.class));
     }
 
     @Test
     void updateAccountTeamBundle() {
+        AccountTeamBundleUpdateReq updateReq1 = new AccountTeamBundleUpdateReq();
+        updateReq1.setEmail("testEmail");
+        updateReq1.setTeamName("testTeam2");
+        updateReq1.setNewEmail("newExam");
 
+        Account account2 = new Account();
+        account2.setAccountId(2);
+        account2.setEmail("testEmail2");
+        account2.setPassword("testPassword2");
+
+        AccountDetails accountDetails2 = new AccountDetails();
+        accountDetails2.setAccountDetailsId(account2.getAccountId());
+        accountDetails2.setAccount(account2);
+        accountDetails2.setName("test2");
+        accountDetails2.setIsDormant(true);
+        accountDetails2.setRegisterDate(LocalDateTime.now().plusHours(9));
+
+        TeamCode teamCode2 = new TeamCode();
+        teamCode2.setTeamId(3);
+        teamCode2.setTeamName("testTeam3");
+
+        AccountTeamBundle bundle2 = new AccountTeamBundle();
+        bundle2.setPk(new AccountTeamBundle.Pk());
+        bundle2.setTeamCode(teamCode2);
+        bundle2.setAccountDetails(accountDetails2);
+        bundle2.setRegisterDate(LocalDateTime.now().plusHours(9));
+        bundle2.getPk().setTeamId(teamCode2.getTeamId());
+        bundle2.getPk().setAccountDetailsId(accountDetails2.getAccountDetailsId());
+
+        doReturn(accountDetails2).when(detailsRepository).getByAccount_Email(updateReq1.getNewEmail());
+        doReturn(bundle1.getAccountDetails()).when(detailsRepository).getByAccount_Email(bundle1.getAccountDetails().getAccount().getEmail());
+
+        doReturn(bundle1.getTeamCode()).when(teamCodeRepository).findByTeamName("testTeam2");
+
+        doReturn(bundle1).when(bundleRepository).findByAccountDetails_NameAndTeamCode_TeamName(bundle1.getAccountDetails().getName(), bundle1.getTeamCode().getTeamName());
+
+        doReturn(bundle2).when(bundleRepository).saveAndFlush(any(AccountTeamBundle.class));
+
+        AccountTeamBundleRespDto result = service.updateAccountTeamBundle(updateReq1);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getTeamName()).isEqualTo(teamCode2.getTeamName());
+        assertThat(result.getAccountEmail()).isEqualTo(accountDetails2.getAccount().getEmail());
     }
 
     @Test
     void deleteAccountTeamBundle() {
+        doReturn(bundle1.getAccountDetails()).when(detailsRepository).getByAccount_Email(bundle1.getAccountDetails().getAccount().getEmail());
+        doReturn(bundle1.getTeamCode()).when(teamCodeRepository).findByTeamName(bundle1.getTeamCode().getTeamName());
 
+        service.deleteAccountTeamBundle(bundle1.getTeamCode().getTeamName(), bundle1.getAccountDetails().getAccount().getEmail());
+
+        verify(bundleRepository, times(1)).deleteByPk_TeamIdAndPk_AccountDetailsId(bundle1.getTeamCode().getTeamId(), bundle1.getAccountDetails().getAccountDetailsId());
     }
 }

@@ -4,6 +4,7 @@ import com.example.minidoorayaccount.domain.TeamCodeDtoImpl;
 import com.example.minidoorayaccount.entity.QTeamCode;
 import com.example.minidoorayaccount.entity.TeamCode;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
+import org.springframework.transaction.annotation.Transactional;
 
 public class TeamCodeRepositoryImpl extends QuerydslRepositorySupport implements TeamCodeRepositoryCustom {
 
@@ -12,21 +13,14 @@ public class TeamCodeRepositoryImpl extends QuerydslRepositorySupport implements
     }
 
     @Override
+    @Transactional
     public void updateTeamCode(TeamCodeDtoImpl teamCodeDto) {
         QTeamCode teamCode = QTeamCode.teamCode;
 
-        update(teamCode)
-                .set(teamCode.teamName, teamCodeDto.getTeamName())
+        TeamCode updateTeamCode = from(teamCode)
                 .where(teamCode.teamId.eq(teamCodeDto.getTeamId()))
-                .execute();
-    }
+                        .fetchFirst();
 
-    @Override
-    public void deleteTeamCode(Integer deleteTeamCodeId) {
-        QTeamCode teamCode = QTeamCode.teamCode;
-
-        delete(teamCode)
-                .where(teamCode.teamId.eq(deleteTeamCodeId))
-                .execute();
+        updateTeamCode.setTeamName(teamCodeDto.getTeamName());
     }
 }

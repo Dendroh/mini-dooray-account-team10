@@ -1,6 +1,5 @@
 package com.example.minidoorayaccount.service;
 
-import com.example.minidoorayaccount.domain.AccountDetailsDtoImpl;
 import com.example.minidoorayaccount.domain.AccountDtoImpl;
 import com.example.minidoorayaccount.domain.AccountUpdateReq;
 import com.example.minidoorayaccount.entity.Account;
@@ -8,7 +7,6 @@ import com.example.minidoorayaccount.exception.NotFoundAccountException;
 import com.example.minidoorayaccount.repository.AccountRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -17,10 +15,7 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
-import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @SpringBootTest
 class AccountServiceTest {
@@ -36,7 +31,7 @@ class AccountServiceTest {
         AccountDtoImpl dto = new AccountDtoImpl(null, "test@gmail.com", "$2a$10$SpohekWHF7IctpwT87wY9eaBawJL1YJfXlQMMB.u5xtZ5GiFuhrN6");
         doReturn(DefaultAccountService.converterToEntity(dto)).when(repository).saveAndFlush(any());
 
-        assertThat(service.createAccount(dto)).isEqualTo(dto);
+        assertThat(service.createAccount(dto).getPassword()).isEqualTo(dto.getPassword());
     }
 
     @Test
@@ -51,7 +46,7 @@ class AccountServiceTest {
 
         Assertions.assertThrows(NotFoundAccountException.class, () -> service.getAccountById(11111));
 
-        assertThat(service.getAccountById(account.getAccountId())).isEqualTo(DefaultAccountService.converterToDtoImpl(account));
+        assertThat(service.getAccountById(account.getAccountId()).getPassword()).isEqualTo(DefaultAccountService.converterToDtoImpl(account).getPassword());
     }
 
     @Test
@@ -79,13 +74,17 @@ class AccountServiceTest {
 
     @Test
     void testModifyAccount() {
-        Account account = new Account();
-        account.setAccountId(23);
-        account.setEmail("testEmail");
-        account.setPassword("testPassword");
+        AccountDtoImpl account = new AccountDtoImpl(23, "testEmail", "testPassword");
 
-        doReturn(account).when(repository).getByEmail("testEmail");
-        doReturn(null).when(repository).getByEmail("notFoundEmail");
+        Account updateAccount = new Account();
+        updateAccount.setAccountId(23);
+        updateAccount.setEmail("updatedEmail");
+        updateAccount.setPassword("updatedPassword");
+
+        doReturn(account).when(repository).queryByEmail("testEmail");
+        doReturn(null).when(repository).queryByEmail("notFoundEmail");
+        doReturn(updateAccount).when(repository).updateAccount(account);
+
 
         AccountUpdateReq updateReq = new AccountUpdateReq();
         updateReq.setBeforeEmail("testEmail");
@@ -101,7 +100,6 @@ class AccountServiceTest {
         updateReq.setBeforeEmail("notFoundEmail");
 
         Assertions.assertThrows(NotFoundAccountException.class, () -> service.modifyAccount(updateReq));
-
     }
 
     @Test

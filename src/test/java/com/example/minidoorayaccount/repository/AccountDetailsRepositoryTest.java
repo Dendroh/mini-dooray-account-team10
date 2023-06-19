@@ -93,7 +93,7 @@ class AccountDetailsRepositoryTest {
         testEntity2.setEmail("example22@gmail.com");
         testEntity2.setPassword("$2a$10$Y.Ri9pJDfOlV.ZLYY2KQwui2TInM6NomOFgWNV33f0PD5oxXKDEue");
 
-        testEntity2 = entityManager.persistAndFlush(testEntity2);
+        testEntity2 = accountRepository.saveAndFlush(testEntity2);
 
         AccountDetails details = new AccountDetails();
         details.setAccountDetailsId(testEntity2.getAccountId());
@@ -103,36 +103,52 @@ class AccountDetailsRepositoryTest {
         details.setImageFileName(null);
         details.setRegisterDate(LocalDateTime.now());
 
-        details = entityManager.persistAndFlush(details);
+        details = repository.saveAndFlush(details);
 
-        AccountDetails accountDetailsDto = repository.getByAccountDetailsId(details.getAccountDetailsId());
+        AccountDetails accountDetails = repository.getByAccountDetailsId(details.getAccountDetailsId());
 
-        assertThat(repository.findByName(accountDetailsDto.getName())).isNull();
+        assertThat(repository.findByName(accountDetails.getName())).isNotNull();
 
-        accountDetailsDto.setName("$2a$10$5WcR");
-        accountDetailsDto.setIsDormant(true);
-        accountDetailsDto.setImageFileName("name.png");
+        accountDetails.setName("$2a$10$5WcR");
+        accountDetails.setIsDormant(true);
+        accountDetails.setImageFileName("name.png");
 
-        assertThat(repository.findByName(accountDetailsDto.getName())).isNotNull();
+        assertThat(repository.findByName("name22")).isNull();
 
         AccountDetails updated = repository.getByAccountDetailsId(details.getAccountDetailsId());
 
-        assertThat(updated.getRegisterDate()).isEqualTo(accountDetailsDto.getRegisterDate());
-        assertThat(updated.getName()).isEqualTo(accountDetailsDto.getName());
+        assertThat(updated.getRegisterDate()).isEqualTo(accountDetails.getRegisterDate());
+        assertThat(updated.getName()).isEqualTo(accountDetails.getName());
         assertThat(updated.getIsDormant()).isTrue();
-        assertThat(updated.getImageFileName()).isEqualTo(accountDetailsDto.getImageFileName());
+        assertThat(updated.getImageFileName()).isEqualTo(accountDetails.getImageFileName());
     }
 
     @Test
     @DisplayName("test delete accountDetails")
     void testDeleteAccountDetails() {
-        AccountDetails accountDetails = repository.getByAccountDetailsId(3);
+        Account testEntity2 = new Account();
+        testEntity2.setEmail("example22@gmail.com");
+        testEntity2.setPassword("$2a$10$Y.Ri9pJDfOlV.ZLYY2KQwui2TInM6NomOFgWNV33f0PD5oxXKDEue");
+
+        testEntity2 = accountRepository.saveAndFlush(testEntity2);
+
+        AccountDetails details = new AccountDetails();
+        details.setAccountDetailsId(testEntity2.getAccountId());
+        details.setAccount(testEntity2);
+        details.setName("name22");
+        details.setIsDormant(false);
+        details.setImageFileName(null);
+        details.setRegisterDate(LocalDateTime.now());
+
+        details = repository.saveAndFlush(details);
+
+        AccountDetails accountDetails = repository.getByAccountDetailsId(details.getAccountDetailsId());
 
         assertThat(accountDetails).isNotNull();
 
         repository.deleteById(accountDetails.getAccountDetailsId());
 
-        accountDetails = repository.getByAccountDetailsId(accountDetails.getAccountDetailsId());
+        accountDetails = repository.getByAccountDetailsId(details.getAccountDetailsId());
 
         assertThat(accountDetails).isNull();
     }

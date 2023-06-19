@@ -13,7 +13,6 @@ import com.example.minidoorayaccount.repository.AccountTeamCodeBundleRepository;
 import com.example.minidoorayaccount.repository.TeamCodeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -92,12 +91,11 @@ public class DefaultAccountTeamBundleService implements AccountTeamBundleService
 
     @Override
     public AccountTeamBundleRespDto updateAccountTeamBundle(AccountTeamBundleUpdateReq accountTeamBundleDto) {
-
         AccountDetails accountDetails = checkNullAndGetAccountDetailsByEmail(accountTeamBundleDto.getEmail());
         TeamCode teamCode = checkNullAndGetTeamCodeByTeamName(accountTeamBundleDto.getTeamName());
         AccountTeamBundle deleteBundle = bundleRepository.findByAccountDetails_NameAndTeamCode_TeamName(accountDetails.getName(), teamCode.getTeamName());
 
-        if (Objects.isNull(bundleRepository.queryByTeamCode_TeamIdAndAccountDetails_AccountDetailsId(teamCode.getTeamId(), accountDetails.getAccountDetailsId())))
+        if (Objects.isNull(deleteBundle))
             throw new NotFoundAccountTeamBundleException();
 
         if (Objects.isNull(accountTeamBundleDto.getNewTeamName())) {

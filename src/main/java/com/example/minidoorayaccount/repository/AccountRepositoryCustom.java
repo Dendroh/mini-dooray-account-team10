@@ -1,7 +1,6 @@
 package com.example.minidoorayaccount.repository;
 
 import com.example.minidoorayaccount.domain.AccountDtoImpl;
-import com.example.minidoorayaccount.domain.AccountUpdateReq;
 import com.example.minidoorayaccount.entity.Account;
 import org.springframework.data.repository.NoRepositoryBean;
 

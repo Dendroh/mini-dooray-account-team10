@@ -44,7 +44,6 @@ public class DefaultTeamCodeService implements TeamCodeService{
     }
 
     @Override
-    @Transactional
     public TeamCodeDtoImpl updateTeamCodeById(TeamCodeUpdateReq updateTeamCode) {
         TeamCode teamCode = repository.findByTeamName(updateTeamCode.getBeforeTeamName());
 
@@ -67,7 +66,7 @@ public class DefaultTeamCodeService implements TeamCodeService{
         if (Objects.isNull(deleteTeamCode))
             throw new NotFoundTeamCodeException();
 
-        repository.deleteTeamCode(deleteTeamCode.getTeamId());
+        repository.deleteById(deleteTeamCode.getTeamId());
     }
 
 
